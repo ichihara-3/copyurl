@@ -1,0 +1,17 @@
+{
+  "name": "copylinks",
+  "description": "copy link and title text!",
+  "version": "0.1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script.js"]
+    }
+  ],
+  "permissions": ["contextMenus", "tabs"]
+}
