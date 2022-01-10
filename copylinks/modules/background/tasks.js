@@ -1,23 +1,18 @@
-class Tasks {
-  copyLink() {
-    this.#sendMessageToContentScript({"task": "copyLink"});
-  }
-
-  copyLinkWithTitleAsText() {
-    this.#sendMessageToContentScript({"task": "copyLinkWithTitleAsText"});
-  }
-
-  copyLinkWithTitleAsMarkdown() {
-    this.#sendMessageToContentScript({"task": "copyLinkWithTitleAsMarkdown"});
-  }
-
-  #sendMessageToContentScript(message) {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const tab = tabs[0];
-      chrome.tabs.sendMessage(tab.id, { "task": "copyLinkOfThePage" });
-    });
-  }
+export function copyLink() {
+  sendMessageToContentScript({"task": "copyLink"});
 }
 
+export function copyLinkWithTitleAsText() {
+  sendMessageToContentScript({"task": "copyLinkWithTitleAsText"});
+}
 
-export { Tasks };
+export function copyLinkWithTitleAsMarkdown() {
+  sendMessageToContentScript({"task": "copyLinkWithTitleAsMarkdown"});
+}
+
+function sendMessageToContentScript(message) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const tab = tabs[0];
+    chrome.tabs.sendMessage(tab.id, message);
+  });
+}
