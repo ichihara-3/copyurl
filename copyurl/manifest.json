@@ -1,6 +1,6 @@
 {
-  "name": "copylinks",
-  "description": "copy link and title text!",
+  "name": "copyurl",
+  "description": "copies url and title text of the current page",
   "version": "0.1.0",
   "manifest_version": 3,
   "background": {

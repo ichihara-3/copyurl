@@ -8,14 +8,14 @@ chrome.runtime.onMessage.addListener(
       throw ("task is not in message.");
     }
     switch (message.task) {
-      case "copyLink":
-        await copyLink();
+      case "copyUrl":
+        await copyUrl();
         break;
-      case "copyLinkWithTitleAsText":
-        await copyLinkWithTitleAsText();
+      case "copyUrlWithTitleAsText":
+        await copyUrlWithTitleAsText();
         break;
-      case "copyLinkWithTitleAsMarkdown":
-        await copyLinkWithTitleAsMarkdown();
+      case "copyUrlWithTitleAsMarkdown":
+        await copyUrlWithTitleAsMarkdown();
         break;
       default:
         console.debug("not implemented");
@@ -25,17 +25,17 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
-async function copyLink() {
+async function copyUrl() {
   const content = location.href
   await copyToClipBoard(content);
 }
 
-async function copyLinkWithTitleAsText() {
+async function copyUrlWithTitleAsText() {
   const content = `${document.title} | ${location.href}`;
   await copyToClipBoard(content);
 }
 
-async function copyLinkWithTitleAsMarkdown() {
+async function copyUrlWithTitleAsMarkdown() {
   const content = `[document.title](${location.href})`;
   await copyToClipBoard(content);
 }
