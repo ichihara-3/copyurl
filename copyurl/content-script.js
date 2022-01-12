@@ -44,7 +44,12 @@ async function copyToClipBoard(content) {
   try {
     await navigator.clipboard.writeText(content);
   } catch (e) {
-    console.info("copying failed.");
-    throw (e);
+    console.debug("copying failed. Trying to fall back to execCommand('copy')");
+    const textArea = document.createElement("textArea");
+    textArea.textContent = content;
+    document.body.append(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    textArea.remove();
   }
 }
