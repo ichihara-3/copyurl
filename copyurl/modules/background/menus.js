@@ -6,27 +6,27 @@ import {
 
 const menus = {
   copyurl: {
-    title: "only",
+    title: "only url",
     task: copyUrl,
   },
   copyurl_titletext: {
-    title: "with title",
+    title: "url with the title",
     task: copyUrlWithTitleAsText,
   },
   copyurl_markdown: {
-    title: "with title as markdown",
+    title: "url with the title as markdown",
     task: copyUrlWithTitleAsMarkdown,
   },
   copyurl_html: {
-    title: "only as html",
+    title: "as html link",
     task: copyUrlAsHtml,
   },
   copyurl_html_title: {
-    title: "with title as html",
+    title: "as html link with title",
     task: copyUrlWithTitleAsHtml,
   },
   copytitle: {
-    title: "title only",
+    title: "copy title only",
     task: copyTitle,
   },
 };
