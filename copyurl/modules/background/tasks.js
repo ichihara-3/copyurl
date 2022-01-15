@@ -10,6 +10,10 @@ export function copyUrlWithTitleAsMarkdown() {
   sendMessageToContentScript({"task": "copyUrlWithTitleAsMarkdown"});
 }
 
+export function copyTitle() {
+  sendMessageToContentScript({ "task": "copyTitle" });
+}
+
 function sendMessageToContentScript(message) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const tab = tabs[0];

@@ -1,4 +1,4 @@
-import { copyUrl, copyUrlWithTitleAsMarkdown, copyUrlWithTitleAsText } from './tasks.js';
+import { copyUrl, copyUrlWithTitleAsMarkdown, copyUrlWithTitleAsText, copyTitle } from './tasks.js';
 
 const menus = {
   copyurl: {
@@ -12,7 +12,11 @@ const menus = {
   copyurl_markdown: {
     title: "with title as markdown",
     task: copyUrlWithTitleAsMarkdown,
-  }
+  },
+  copytitle: {
+    title: "title only",
+    task: copyTitle,
+  },
 };
 
 export { menus };
