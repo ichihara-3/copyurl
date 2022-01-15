@@ -19,7 +19,7 @@ function createContextMenus() {
 function runTaskOfClickedMenu(info, tab) {
   const id = info.menuItemId;
   if (!(id in menus)) {
-    throw("an undefined item of menus.")
+    throw ("an undefined item of menus.")
   }
   const task = menus[id]["task"];
   task();

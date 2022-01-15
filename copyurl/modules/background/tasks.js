@@ -10,6 +10,15 @@ export function copyUrlWithTitleAsMarkdown() {
   sendMessageToContentScript({"task": "copyUrlWithTitleAsMarkdown"});
 }
 
+export function copyUrlAsHtml() {
+  sendMessageToContentScript({ "task": "copyUrlAsHtml" });
+}
+
+export function copyUrlWithTitleAsHtml() {
+  sendMessageToContentScript({ "task": "copyUrlWithTitleAsHtml" });
+}
+
+
 export function copyTitle() {
   sendMessageToContentScript({ "task": "copyTitle" });
 }

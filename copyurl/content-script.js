@@ -17,8 +17,15 @@ chrome.runtime.onMessage.addListener(
       case "copyUrlWithTitleAsMarkdown":
         await copyUrlWithTitleAsMarkdown();
         break;
+      case "copyUrlAsHtml":
+        await copyUrlAsHtml();
+        break;
+      case "copyUrlWithTitleAsHtml":
+        await copyUrlWithTitleAsHtml();
+        break;
       case "copyTitle":
         await copyTitle();
+        break;
       default:
         console.debug("not implemented");
     }
@@ -39,6 +46,21 @@ async function copyUrlWithTitleAsText() {
 
 async function copyUrlWithTitleAsMarkdown() {
   const content = `[document.title](${location.href})`;
+  await copyToClipBoard(content);
+}
+
+async function copyUrlAsHtml() {
+  const a = document.createElement("a");
+  a.href = location.href;
+  const content = a.outerHTML;
+  await copyToClipBoard(content);
+}
+
+async function copyUrlWithTitleAsHtml() {
+  const a = document.createElement("a");
+  a.href = location.href;
+  a.innerText = document.title;
+  const content = a.outerHTML;
   await copyToClipBoard(content);
 }
 
