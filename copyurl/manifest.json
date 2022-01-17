@@ -13,5 +13,5 @@
       "js": ["content-script.js"]
     }
   ],
-  "permissions": ["contextMenus", "tabs"]
+  "permissions": ["contextMenus"]
 }
