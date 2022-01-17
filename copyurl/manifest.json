@@ -13,7 +13,7 @@
       "js": ["content-script.js"]
     }
   ],
-  "permissions": ["contextMenus", "tabs"],
+  "permissions": ["contextMenus"],
   "icons": {
     "128": "img/copyurl_128.png"
   }
