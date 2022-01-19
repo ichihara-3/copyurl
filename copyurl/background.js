@@ -2,8 +2,23 @@
 
 import { menus } from "./modules/background/menus.js"
 
-chrome.runtime.onInstalled.addListener(createContextMenus);
-chrome.runtime.onMessage.addListener(updateContextMenus);
+chrome.runtime.onInstalled.addListener(initializeMenus);
+chrome.runtime.onMessage.addListener(refreshMenus);
+
+chrome.contextMenus.onClicked.addListener(runTaskOfClickedMenu);
+
+function initializeMenus(details) {
+  createContextMenus();
+}
+
+function refreshMenus(message, sender, sendResponse) {
+  if (!message.refresh) {
+    sendResponse({ result: 'refreshMenus did nothing' });
+    return
+  }
+  updateContextMenus();
+  sendResponse({ result: 'finshed' });
+}
 
 function createContextMenus() {
   for (const key in menus) {
@@ -16,7 +31,11 @@ function createContextMenus() {
       );
     }
   }
-  chrome.contextMenus.onClicked.addListener(runTaskOfClickedMenu);
+}
+
+function updateContextMenus() {
+  chrome.contextMenus.removeAll();
+  createContextMenus();
 }
 
 function runTaskOfClickedMenu(info, tab) {
@@ -27,22 +46,3 @@ function runTaskOfClickedMenu(info, tab) {
   const task = menus[id]["task"];
   task();
 }
-
-function updateContextMenus(message, sender, sendResponse) {
-  chrome.contextMenus.removeAll();
-  for (const key in menus) {
-    if (!(menus[key][active])) {
-      chrome.contextMenus.remove(key);
-    }
-  }
-  for (const key in menus) {
-    if (menus[key][active]) {
-      chrome.contextMenus.create(
-        {
-          id
-        }
-      )
-    }
-  }
-}
-
