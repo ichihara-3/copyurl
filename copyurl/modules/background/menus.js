@@ -23,12 +23,12 @@ const menus = {
   copyurl_html: {
     title: "as html link",
     task: copyUrlAsHtml,
-    active: true,
+    active: false,
   },
   copyurl_html_title: {
     title: "as html link with title",
     task: copyUrlWithTitleAsHtml,
-    active: true,
+    active: false,
   },
   copytitle: {
     title: "copy title only",

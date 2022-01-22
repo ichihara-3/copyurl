@@ -1,6 +1,6 @@
 "use strict";
 
-import { menus } from "./modules/background/menus.js"
+import { menus as defaultMenus } from "./modules/background/menus.js"
 
 chrome.runtime.onInstalled.addListener(initializeMenus);
 chrome.runtime.onMessage.addListener(refreshMenus);
@@ -8,7 +8,17 @@ chrome.runtime.onMessage.addListener(refreshMenus);
 chrome.contextMenus.onClicked.addListener(runTaskOfClickedMenu);
 
 function initializeMenus(details) {
-  createContextMenus();
+  chrome.storage.sync.get("menus")
+    .then((items) => {
+      let menus;
+      if (items.menus) {
+        menus = items.menus;
+      } else {
+        menus = defaultMenus;
+      }
+      chrome.storage.sync.set({ menus })
+        .then(createContextMenus(menus));
+    });
 }
 
 function refreshMenus(message, sender, sendResponse) {
@@ -20,7 +30,7 @@ function refreshMenus(message, sender, sendResponse) {
   sendResponse({ result: 'finshed' });
 }
 
-function createContextMenus() {
+function createContextMenus(menus) {
   for (const key in menus) {
     if (menus[key]["active"]) {
       chrome.contextMenus.create(
@@ -33,16 +43,24 @@ function createContextMenus() {
   }
 }
 
-function updateContextMenus() {
+function updateContextMenus(menus) {
   chrome.contextMenus.removeAll();
-  createContextMenus();
+  chrome.storage.sync.get("menus")
+    .then((items) => {
+      if (items.menus) {
+        const menus = items.menus;
+      } else {
+        const menus = defaultMenus;
+      }
+      createContextMenus(menus);
+    });
 }
 
 function runTaskOfClickedMenu(info, tab) {
   const id = info.menuItemId;
-  if (!(id in menus)) {
+  if (!(id in defaultMenus)) {
     throw ("an undefined item of menus.")
   }
-  const task = menus[id]["task"];
+  const task = defaultMenus[id]["task"];
   task();
 }

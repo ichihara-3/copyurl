@@ -13,7 +13,8 @@
       "js": ["content-script.js"]
     }
   ],
-  "permissions": ["contextMenus"],
+  "options_page": "options/index.html",
+  "permissions": ["contextMenus", "storage"],
   "icons": {
     "128": "img/copyurl_128.png"
   }
