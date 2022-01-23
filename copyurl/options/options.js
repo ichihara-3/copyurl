@@ -1,3 +1,4 @@
+"use strict";
 
 chrome.storage.sync.get("menus")
   .then((items) => {
@@ -20,16 +21,22 @@ chrome.storage.sync.get("menus")
       menuDiv.appendChild(label);
 
       checkbox.addEventListener("change", (event) => {
-        updateMenus(menus);
+        updateMenus();
       })
     }
   });
 
-function updateMenus(menus) {
-  for (const key in menus) {
-    const checkbox = document.getElementById(key);
-    menus[key]["active"] = checkbox.checked;
-  }
-  chrome.storage.sync.set(menus);
+function updateMenus() {
+  chrome.storage.sync.get("menus")
+    .then((items) => {
+      const menus = items.menus;
+      for (const key in menus) {
+        const checkbox = document.getElementById(key);
+        menus[key]["active"] = checkbox.checked;
+      }
+      chrome.storage.sync.set({ menus }).then(() => {
+        chrome.runtime.sendMessage({ refresh: true })
+      });
+    });
 }
 

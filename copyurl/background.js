@@ -43,16 +43,16 @@ function createContextMenus(menus) {
   }
 }
 
-function updateContextMenus(menus) {
+function updateContextMenus() {
   chrome.contextMenus.removeAll();
   chrome.storage.sync.get("menus")
     .then((items) => {
       if (items.menus) {
-        const menus = items.menus;
+        createContextMenus(items.menus);
       } else {
-        const menus = defaultMenus;
+        createContextMenus(defaultMenus);
+        console.log("update failed, fallback to default menu")
       }
-      createContextMenus(menus);
     });
 }
 
