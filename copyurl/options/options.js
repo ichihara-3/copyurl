@@ -17,8 +17,13 @@ chrome.storage.sync.get("menus")
       label.for = key;
       label.innerText = menus[key]["title"];
 
+      const p = document.createElement("p");
+      p.className = "description"
+      p.innerText = menus[key]["description"];
+
       menuDiv.appendChild(checkbox);
       menuDiv.appendChild(label);
+      menuDiv.appendChild(p);
 
       checkbox.addEventListener("change", (event) => {
         updateMenus();
