@@ -23,6 +23,10 @@ export function copyTitle() {
   sendMessageToContentScript({ "task": "copyTitle" });
 }
 
+export function copyRichLink() {
+  sendMessageToContentScript({ "task": "copyRichLink" });
+}
+
 function sendMessageToContentScript(message) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const tab = tabs[0];

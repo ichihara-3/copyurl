@@ -2,31 +2,32 @@ import {
   copyUrl, copyUrlWithTitleAsMarkdown,
   copyUrlWithTitleAsText, copyTitle,
   copyUrlAsHtml, copyUrlWithTitleAsHtml,
+  copyRichLink
 } from './tasks.js';
 
 const menus = {
   copyurl: {
-    title: "only url",
+    title: "copy only url",
     task: copyUrl,
     active: true,
   },
   copyurl_titletext: {
-    title: "url with the title",
+    title: "copy url with the title",
     task: copyUrlWithTitleAsText,
     active: true,
   },
   copyurl_markdown: {
-    title: "url with the title as markdown",
+    title: "copy url and title as markdown",
     task: copyUrlWithTitleAsMarkdown,
     active: true,
   },
   copyurl_html: {
-    title: "as html link",
+    title: "copy url as html link",
     task: copyUrlAsHtml,
     active: false,
   },
   copyurl_html_title: {
-    title: "as html link with title",
+    title: "copy url as html link with title",
     task: copyUrlWithTitleAsHtml,
     active: false,
   },
@@ -35,6 +36,11 @@ const menus = {
     task: copyTitle,
     active: true,
   },
+  copyRichLink: {
+    title: "copy url as rich text link",
+    task: copyRichLink,
+    active: true,
+  }
 };
 
 export { menus };

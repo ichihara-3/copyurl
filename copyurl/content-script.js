@@ -26,6 +26,9 @@ chrome.runtime.onMessage.addListener(
       case "copyTitle":
         await copyTitle();
         break;
+      case "copyRichLink":
+        await copyRichLink();
+        break;
       default:
         console.debug("not implemented");
     }
@@ -36,24 +39,24 @@ chrome.runtime.onMessage.addListener(
 
 async function copyUrl() {
   const content = location.href
-  await copyToClipBoard(content);
+  await writeToClipboard(content);
 }
 
 async function copyUrlWithTitleAsText() {
   const content = `${document.title} | ${location.href}`;
-  await copyToClipBoard(content);
+  await writeToClipboard(content);
 }
 
 async function copyUrlWithTitleAsMarkdown() {
   const content = `[document.title](${location.href})`;
-  await copyToClipBoard(content);
+  await writeToClipboard(content);
 }
 
 async function copyUrlAsHtml() {
   const a = document.createElement("a");
   a.href = location.href;
   const content = a.outerHTML;
-  await copyToClipBoard(content);
+  await writeToClipboard(content);
 }
 
 async function copyUrlWithTitleAsHtml() {
@@ -61,15 +64,22 @@ async function copyUrlWithTitleAsHtml() {
   a.href = location.href;
   a.innerText = document.title;
   const content = a.outerHTML;
-  await copyToClipBoard(content);
+  await writeToClipboard(content);
 }
 
 async function copyTitle() {
   const content = document.title;
-  await copyToClipBoard(content);
+  await writeToClipboard(content);
 }
 
-async function copyToClipBoard(content) {
+async function copyRichLink() {
+  const a = document.createElement("a");
+  a.href = location.href;
+  a.innerText = document.title;
+  await writeRichTextToClipboard(a.outerHTML);
+}
+
+async function writeToClipboard(content) {
   try {
     await navigator.clipboard.writeText(content);
   } catch (e) {
@@ -80,5 +90,27 @@ async function copyToClipBoard(content) {
     textArea.select();
     document.execCommand('copy');
     textArea.remove();
+  }
+}
+
+async function writeRichTextToClipboard(content) {
+  const contenttype = "text/html";
+  const blob = new Blob([content], { type: contenttype });
+  try {
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        [blob.type]: blob,
+      })]);
+  } catch (e) {
+    console.debug(e);
+    console.debug("copying failed. Trying to fall back to execCommand('copy')");
+
+    function listener(event) {
+      event.preventDefault();
+      event.clipboardData.setData(blob.type, content);
+    }
+    document.addEventListener("copy", listener)
+    document.execCommand('copy');
+    document.removeEventListener("copy", listener);
   }
 }
