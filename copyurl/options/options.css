@@ -1,0 +1,11 @@
+h1 {
+  font: 2rem 'Fira Sans', sans-serif;
+}
+
+p, label {
+  font: 1rem 'Fira Sans', sans-serif;
+}
+
+input {
+  margin: .4rem;
+}
