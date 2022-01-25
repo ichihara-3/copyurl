@@ -76,7 +76,7 @@ async function copyRichLink() {
   const a = document.createElement("a");
   a.href = location.href;
   a.innerText = document.title;
-  await writeRichTextToClipboard(a.outerHTML);
+  await writeRichTextToClipboard(a);
 }
 
 async function writeToClipboard(content) {
@@ -94,12 +94,13 @@ async function writeToClipboard(content) {
 }
 
 async function writeRichTextToClipboard(content) {
-  const contenttype = "text/html";
-  const blob = new Blob([content], { type: contenttype });
+  const htmlblob = new Blob([content.outerHTML], { type: "text/html" });
+  const textblob = new Blob([content.href], { type: "text/plain" });
   try {
     await navigator.clipboard.write([
       new ClipboardItem({
-        [blob.type]: blob,
+        [htmlblob.type]: htmlblob,
+        [textblob.type]: textblob,
       })]);
   } catch (e) {
     console.debug(e);
@@ -107,7 +108,8 @@ async function writeRichTextToClipboard(content) {
 
     function listener(event) {
       event.preventDefault();
-      event.clipboardData.setData(blob.type, content);
+      event.clipboardData.setData("text/html", content);
+      event.clipboardData.setData("text/plain", content);
     }
     document.addEventListener("copy", listener)
     document.execCommand('copy');

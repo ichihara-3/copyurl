@@ -1,7 +1,7 @@
 {
-  "name": "copyurl",
-  "description": "copies url and title text of the current page",
-  "version": "0.3.0",
+  "name": "COPY RICH URL",
+  "description": "copies url and title text as RICH TEXT of the current tab, you can also select various styles",
+  "version": "0.3.1",
   "manifest_version": 3,
   "background": {
     "service_worker": "background.js",
