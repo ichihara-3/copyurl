@@ -8,16 +8,26 @@ chrome.runtime.onMessage.addListener(refreshMenus);
 chrome.contextMenus.onClicked.addListener(runTaskOfClickedMenu);
 
 function initializeMenus(details) {
-  chrome.storage.sync.get("menus")
+  chrome.storage.sync.remove("menus");
+
+  chrome.storage.sync.get("contextMenus")
     .then((items) => {
-      let menus;
-      if (items.menus) {
-        menus = items.menus;
-      } else {
-        menus = defaultMenus;
+      let contextMenus = defaultMenus;
+      if (items && items.contextMenus) {
+        for (const menu of items.contextMenus) {
+          if (menu.active !== undefined) {
+            for (const contextMenu of contextMenus) {
+              if (contextMenu.id === menu.id) {
+                contextMenu.active = menu.active;
+                break;
+              }
+            }
+            break;
+          }
+        }
       }
-      chrome.storage.sync.set({ menus })
-        .then(createContextMenus(menus));
+      chrome.storage.sync.set({ contextMenus })
+        .then(createContextMenus(contextMenus));
     });
 }
 
@@ -30,37 +40,50 @@ function refreshMenus(message, sender, sendResponse) {
   sendResponse({ result: 'finshed' });
 }
 
-function createContextMenus(menus) {
-  for (const key in menus) {
-    if (menus[key]["active"]) {
-      chrome.contextMenus.create(
-        {
-          id: key,
-          title: menus[key]["title"],
-        }
-      );
-    }
+function createContextMenus(contextMenus) {
+  for (const menu of contextMenus) {
+    chrome.contextMenus.create(
+      {
+        id: menu["id"],
+        title: menu["title"],
+        visible: menu["active"],
+      }
+    );
   }
 }
 
 function updateContextMenus() {
-  chrome.contextMenus.removeAll();
-  chrome.storage.sync.get("menus")
+  chrome.storage.sync.get("contextMenus")
     .then((items) => {
-      if (items.menus) {
-        createContextMenus(items.menus);
+      let contextMenus = null;
+      if (items && items.contextMenus) {
+        contextMenus = items.contextMenus;
       } else {
-        createContextMenus(defaultMenus);
+        contextMenus = defaultMenus;
         console.log("update failed, fallback to default menu")
+      }
+      for (const menu of contextMenus) {
+        chrome.contextMenus.update(
+          menu["id"],
+          {
+            visible: menu["active"],
+          }
+        );
       }
     });
 }
 
 function runTaskOfClickedMenu(info, tab) {
   const id = info.menuItemId;
-  if (!(id in defaultMenus)) {
-    throw ("an undefined item of menus.")
+  let task = null;
+  for (const menu of defaultMenus) {
+    if (menu["id"] === id) {
+      task = menu["task"];
+      break;
+    }
   }
-  const task = defaultMenus[id]["task"];
+  if (task === null) {
+    throw ("an undefined item of contextMenus.")
+  }
   task();
 }
