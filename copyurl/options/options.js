@@ -1,25 +1,25 @@
 "use strict";
 
-chrome.storage.sync.get("menus")
+chrome.storage.sync.get("contextMenus")
   .then((items) => {
-    const menus = items.menus;
+    const contextMenus = items.contextMenus;
     const options = document.getElementById("options");
-    for (const key in menus) {
+    for (const menu of contextMenus) {
       const menuDiv = document.createElement("div");
       options.appendChild(menuDiv);
 
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
-      checkbox.id = key;
-      checkbox.checked = menus[key]["active"];
+      checkbox.id = menu["id"];
+      checkbox.checked = menu["active"];
 
       const label = document.createElement("label");
-      label.for = key;
-      label.innerText = menus[key]["title"];
+      label.for = menu["id"];
+      label.innerText = menu["title"];
 
       const p = document.createElement("p");
       p.className = "description"
-      p.innerText = menus[key]["description"];
+      p.innerText = menu["description"];
 
       menuDiv.appendChild(checkbox);
       menuDiv.appendChild(label);
@@ -32,14 +32,14 @@ chrome.storage.sync.get("menus")
   });
 
 function updateMenus() {
-  chrome.storage.sync.get("menus")
+  chrome.storage.sync.get("contextMenus")
     .then((items) => {
-      const menus = items.menus;
-      for (const key in menus) {
-        const checkbox = document.getElementById(key);
-        menus[key]["active"] = checkbox.checked;
+      const contextMenus = items.contextMenus;
+      for (const menu of contextMenus) {
+        const checkbox = document.getElementById(menu["id"]);
+        menu["active"] = checkbox.checked;
       }
-      chrome.storage.sync.set({ menus }).then(() => {
+      chrome.storage.sync.set({ contextMenus }).then(() => {
         chrome.runtime.sendMessage({ refresh: true })
       });
     });
