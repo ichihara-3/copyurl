@@ -111,7 +111,7 @@ async function writeRichTextToClipboard(content) {
       event.clipboardData.setData("text/html", content.outerHTML);
       event.clipboardData.setData("text/plain", content.href);
     }
-    document.addEventListener("copy", listener, {passive: false})
+    document.addEventListener("copy", listener, { passive: false })
     document.execCommand('copy');
     document.removeEventListener("copy", listener);
   }

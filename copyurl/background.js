@@ -33,11 +33,11 @@ function initializeMenus(details) {
 
 function refreshMenus(message, sender, sendResponse) {
   if (!message.refresh) {
-    sendResponse({ result: 'refreshMenus did nothing' });
+    sendResponse({ result: "refreshMenus did nothing" });
     return
   }
   updateContextMenus();
-  sendResponse({ result: 'finshed' });
+  sendResponse({ result: "finshed" });
 }
 
 function createContextMenus(contextMenus) {

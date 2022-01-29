@@ -3,7 +3,7 @@ import {
   copyUrlWithTitleAsText, copyTitle,
   copyUrlAsHtml, copyUrlWithTitleAsHtml,
   copyRichLink
-} from './tasks.js';
+} from "./tasks.js";
 
 const menus = [
   {
@@ -35,14 +35,14 @@ const menus = [
   },
   {
     id: "copyurl_html",
-    title: "html link",
+    title: "HTML link",
     task: copyUrlAsHtml,
     active: false,
     description: "Copies the URL as HTML-style anchor link(a tag).",
   },
   {
     id: "copyurl_html_title",
-    title: "html link with title",
+    title: "HTML link with title",
     task: copyUrlWithTitleAsHtml,
     active: false,
     description: "Copies the URL and TITLE as an HTML-style anchor link (a tag).",
