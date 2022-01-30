@@ -48,7 +48,7 @@ async function copyUrlWithTitleAsText() {
 }
 
 async function copyUrlWithTitleAsMarkdown() {
-  const content = `[document.title](${location.href})`;
+  const content = `[${document.title}](${location.href})`;
   await writeToClipboard(content);
 }
 
