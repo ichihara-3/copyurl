@@ -75,15 +75,18 @@ function updateContextMenus() {
 
 function runTaskOfClickedMenu(info, tab) {
   const id = info.menuItemId;
-  let task = null;
-  for (const menu of defaultMenus) {
-    if (menu["id"] === id) {
-      task = menu["task"];
-      break;
-    }
+
+  const menu = defaultMenus.filter(item => item.id === id);
+  if (menu.length !== 1) {
+    console.debug("not implemented function.");
+    return
   }
-  if (task === null) {
-    throw ("an undefined item of contextMenus.")
-  }
-  task();
+  sendMessageToContentScript({ "task": menu[0].id });
+}
+
+function sendMessageToContentScript(message) {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const tab = tabs[0];
+    chrome.tabs.sendMessage(tab.id, message);
+  });
 }
