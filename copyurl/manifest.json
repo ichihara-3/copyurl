@@ -1,20 +1,14 @@
 {
   "name": "COPY RICH URL",
   "description": "Copies url and title of the current tab as RICH TEXT, you can also choose various styles.",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "manifest_version": 3,
   "background": {
     "service_worker": "background.js",
     "type": "module"
   },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content-script.js"]
-    }
-  ],
   "options_page": "options/index.html",
-  "permissions": ["contextMenus", "storage"],
+  "permissions": ["contextMenus", "storage", "activeTab", "scripting"],
   "icons": {
     "128": "img/copyurl_128.png"
   }
