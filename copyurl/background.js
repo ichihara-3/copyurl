@@ -1,5 +1,6 @@
 "use strict";
 
+import { Copy } from "./modules/background/Copy.js";
 import { menus as defaultMenus } from "./modules/background/menus.js"
 
 chrome.runtime.onInstalled.addListener(initializeMenus);
@@ -73,20 +74,13 @@ function updateContextMenus() {
     });
 }
 
-function runTaskOfClickedMenu(info, tab) {
-  const id = info.menuItemId;
-
-  const menu = defaultMenus.filter(item => item.id === id);
-  if (menu.length !== 1) {
-    console.debug("not implemented function.");
-    return
-  }
-  sendMessageToContentScript({ "task": menu[0].id });
-}
-
-function sendMessageToContentScript(message) {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const tab = tabs[0];
-    chrome.tabs.sendMessage(tab.id, message);
-  });
+async function runTaskOfClickedMenu(info, tab) {
+  const task = info.menuItemId;
+  chrome.scripting.executeScript(
+    {
+      target: { tabId: tab.id, allFrames: true },
+      args: [task],
+      func: Copy,
+    }
+  );
 }
