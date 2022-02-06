@@ -9,8 +9,6 @@ chrome.runtime.onMessage.addListener(refreshMenus);
 chrome.contextMenus.onClicked.addListener(runTaskOfClickedMenu);
 
 function initializeMenus(details) {
-  chrome.storage.sync.remove("menus");
-
   chrome.storage.sync.get("contextMenus")
     .then((items) => {
       let contextMenus = defaultMenus;

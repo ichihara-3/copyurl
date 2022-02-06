@@ -1,0 +1,48 @@
+{
+  "description": {
+    "message": "Copies url and title of the current tab as RICH TEXT, you can also choose various styles.",
+    "description": "the description of the extension"
+  },
+  "copyRichLink": {
+    "message": "rich text link"
+  },
+  "copyRichLink_description": {
+    "message": "Copies the URL of a tab as a rich text link, so that you can paste the link with the title to your document(e.g. Google docs...) WITHOUT any editing."
+  },
+  "copyUrl": {
+    "message": "現在のページのURLcopy URL of this page"
+  },
+  "copyUrl_description": {
+    "message": "Copies only the URL of the page to the clipboard."
+  },
+  "copyUrlWithTitleAsText": {
+    "message": "URL with title"
+  },
+  "copyUrlWithTitleAsText_description": {
+    "message": "Copies the URL and TITLE of the page, they are separated with `|`."
+  },
+  "copyUrlWithTitleAsMarkdown": {
+    "message": "URL and title as markdown"
+  },
+  "copyUrlWithTitleAsMarkdown_description": {
+    "message": "Copies the URL and TITLE as a markdown-style link."
+  },
+  "copyUrlAsHtml": {
+    "message": "HTML link"
+  },
+  "copyUrlAsHtml_description": {
+    "message": "Copies the URL as HTML-style anchor link(a tag)."
+  },
+  "copyUrlWithTitleAsHtml": {
+    "message": "HTML link with title"
+  },
+  "copyUrlWithTitleAsHtml_description": {
+    "message": "Copies the URL and TITLE as an HTML-style anchor link (a tag)."
+  },
+  "copyTitle": {
+    "message": "title only"
+  },
+  "copyTitle_description": {
+    "message": "Copies the TITLE of the page."
+  }
+}

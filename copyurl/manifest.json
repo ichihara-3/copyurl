@@ -1,8 +1,9 @@
 {
   "name": "COPY RICH URL",
-  "description": "Copies url and title of the current tab as RICH TEXT, you can also choose various styles.",
-  "version": "0.4.0",
+  "description": "__MSG_description__",
+  "version": "0.5.0",
   "manifest_version": 3,
+  "default_locale": "en",
   "background": {
     "service_worker": "background.js",
     "type": "module"
