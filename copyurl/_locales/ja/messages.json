@@ -1,0 +1,48 @@
+{
+  "description": {
+    "message": "現在開いているURLとタイトルを、リッチテキスト形式でクリップボードに保存できます。マークダウンなど他形式も使えます。",
+    "description": "the description of the extension"
+  },
+  "copyRichLink": {
+    "message": "リッチテキスト形式"
+  },
+  "copyRichLink_description": {
+    "message": "現在のページのURLとタイトルリンクを、リッチテキスト形式でクリップボードに保存します。Google Docsなどにタイトル付きリンクとしてそのまま貼り付けることができます。"
+  },
+  "copyUrl": {
+    "message": "URLのみ"
+  },
+  "copyUrl_description": {
+    "message": "現在のページのURLを、クリップボードに保存します。"
+  },
+  "copyUrlWithTitleAsText": {
+    "message": "URLとタイトル"
+  },
+  "copyUrlWithTitleAsText_description": {
+    "message": "現在のページのURLとタイトルを、 `|` 区切りでクリップボードに保存します。"
+  },
+  "copyUrlWithTitleAsMarkdown": {
+    "message": "マークダウン形式"
+  },
+  "copyUrlWithTitleAsMarkdown_description": {
+    "message": "現在のページのURLとタイトルを、マークダウン形式([title](url))でクリップボードに保存します。"
+  },
+  "copyUrlAsHtml": {
+    "message": "HTML形式"
+  },
+  "copyUrlAsHtml_description": {
+    "message": "現在のページのURLを、HTML形式(aタグ)でクリップボードに保存します。"
+  },
+  "copyUrlWithTitleAsHtml": {
+    "message": "HTML形式(タイトル付き)"
+  },
+  "copyUrlWithTitleAsHtml_description": {
+    "message": "現在のページのURLを、タイトル付きのHTML形式(aタグ)でクリップボードに保存します"
+  },
+  "copyTitle": {
+    "message": "タイトルのみ"
+  },
+  "copyTitle_description": {
+    "message": "現在のページのタイトルのみを、クリップボードに保存します。"
+  }
+}
