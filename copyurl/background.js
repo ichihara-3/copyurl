@@ -3,10 +3,15 @@
 import { Copy } from "./modules/background/Copy.js";
 import { menus as defaultMenus } from "./modules/background/menus.js"
 
+// initialize
 chrome.runtime.onInstalled.addListener(initializeMenus);
+// for option change events
 chrome.runtime.onMessage.addListener(refreshMenus);
-
+// contextmenus click event
 chrome.contextMenus.onClicked.addListener(runTaskOfClickedMenu);
+// icon click event
+// run first action of the menus
+chrome.action.onClicked.addListener(tab => copyLink(tab, defaultMenus[0].id));
 
 function initializeMenus(details) {
   chrome.storage.sync.get("contextMenus")
@@ -72,8 +77,12 @@ function updateContextMenus() {
     });
 }
 
-async function runTaskOfClickedMenu(info, tab) {
+function runTaskOfClickedMenu(info, tab) {
   const task = info.menuItemId;
+  copyLink(tab, task);
+}
+
+function copyLink(tab, task) {
   chrome.scripting.executeScript(
     {
       target: { tabId: tab.id, allFrames: true },
@@ -82,3 +91,4 @@ async function runTaskOfClickedMenu(info, tab) {
     }
   );
 }
+

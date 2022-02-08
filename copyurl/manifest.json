@@ -9,6 +9,9 @@
     "type": "module"
   },
   "options_page": "options/index.html",
+  "action": {
+    "default_title": "__MSG_default_title__"
+  },
   "permissions": ["contextMenus", "storage", "activeTab", "scripting"],
   "icons": {
     "128": "img/copyurl_128.png"
