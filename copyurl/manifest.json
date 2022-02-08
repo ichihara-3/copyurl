@@ -1,7 +1,7 @@
 {
   "name": "COPY RICH URL",
   "description": "__MSG_description__",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "manifest_version": 3,
   "default_locale": "en",
   "background": {
