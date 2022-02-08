@@ -1,7 +1,10 @@
 {
   "description": {
-    "message": "Copies url and title of the current tab as RICH TEXT, you can also choose various styles.",
+    "message": "Just clicking the icon and copying the link of the page as RICH TEXT. Also markdown and other styles are available with right click menu.",
     "description": "the description of the extension"
+  },
+  "default_title": {
+    "message": "Just Click the icon to copy the URL. \nOR RIGHT CLICK in a page and select COPY RICH URL."
   },
   "copyRichLink": {
     "message": "rich text link"

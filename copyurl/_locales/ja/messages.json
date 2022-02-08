@@ -1,7 +1,10 @@
 {
   "description": {
-    "message": "現在開いているURLとタイトルを、リッチテキスト形式でクリップボードに保存できます。マークダウンなど他形式も使えます。",
+    "message": "アイコンをクリックすると、現在開いているページのリンクをリッチテキスト形式でクリップボード保存できます。マークダウンなども使えます。",
     "description": "the description of the extension"
+  },
+  "default_title": {
+    "message": "アイコンクリックでページのURLをコピー！\nまたは、ページ内で右クリックして、COPY RICH URLを選択してください。"
   },
   "copyRichLink": {
     "message": "リッチテキスト形式"
