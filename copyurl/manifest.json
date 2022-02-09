@@ -2,7 +2,7 @@
   "name": "COPY RICH URL",
   "description": "__MSG_description__",
   "version": "0.6.1",
-  "manigit fest_version": 3,
+  "manifest_version": 3,
   "default_locale": "en",
   "background": {
     "service_worker": "background.js",
