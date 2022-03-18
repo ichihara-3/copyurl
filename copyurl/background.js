@@ -1,7 +1,7 @@
 "use strict";
 
 import { Copy } from "./modules/background/Copy.js";
-import { menus as defaultMenus } from "./modules/background/menus.js"
+import { menus as defaultMenus } from "./modules/background/menus.js";
 
 // initialize
 chrome.runtime.onInstalled.addListener(initializeMenus);
@@ -12,69 +12,80 @@ chrome.contextMenus.onClicked.addListener(runTaskOfClickedMenu);
 // icon click event
 // run first action of the menus
 chrome.action.onClicked.addListener(tab => copyLink(tab, defaultMenus[0].id));
+// for debug convenience
+// chrome.action.onClicked.addListener((tab) =>
+//   chrome.scripting.executeScript({
+//     target: { tabId: tab.id, allFrames: true },
+//     func: () =>
+//       navigator.clipboard.read().then((items) => {
+//         items.forEach((item) =>
+//           item.types.forEach((type) =>
+//             item
+//               .getType(type)
+//               .then((blob) => blob.text())
+//               .then((text) => console.log(type, text))
+//           )
+//         );
+//       }),
+//   })
+// );
 
 function initializeMenus(details) {
-  chrome.storage.sync.get("contextMenus")
-    .then((items) => {
-      let contextMenus = defaultMenus;
-      if (items && items.contextMenus) {
-        for (const menu of items.contextMenus) {
-          if (menu.active !== undefined) {
-            for (const contextMenu of contextMenus) {
-              if (contextMenu.id === menu.id) {
-                contextMenu.active = menu.active;
-                break;
-              }
+  chrome.storage.sync.get("contextMenus").then((items) => {
+    let contextMenus = defaultMenus;
+    if (items && items.contextMenus) {
+      for (const menu of items.contextMenus) {
+        if (menu.active !== undefined) {
+          for (const contextMenu of contextMenus) {
+            if (contextMenu.id === menu.id) {
+              contextMenu.active = menu.active;
+              break;
             }
-            break;
           }
+          break;
         }
       }
-      chrome.storage.sync.set({ contextMenus })
-        .then(createContextMenus(contextMenus));
-    });
+    }
+    chrome.storage.sync
+      .set({ contextMenus })
+      .then(createContextMenus(contextMenus));
+  });
 }
 
 function refreshMenus(message, sender, sendResponse) {
   if (!message.refresh) {
     sendResponse({ result: "refreshMenus did nothing" });
-    return
+    return;
   }
   updateContextMenus();
-  sendResponse({ result: "finshed" });
+  sendResponse({ result: "finished" });
 }
 
 function createContextMenus(contextMenus) {
   for (const menu of contextMenus) {
-    chrome.contextMenus.create(
-      {
-        id: menu["id"],
-        title: menu["title"],
-        visible: menu["active"],
-      }
-    );
+    chrome.contextMenus.create({
+      id: menu["id"],
+      title: menu["title"],
+      visible: menu["active"],
+    });
   }
 }
 
 function updateContextMenus() {
-  chrome.storage.sync.get("contextMenus")
-    .then((items) => {
-      let contextMenus = null;
-      if (items && items.contextMenus) {
-        contextMenus = items.contextMenus;
-      } else {
-        contextMenus = defaultMenus;
-        console.log("update failed, fallback to default menu")
-      }
-      for (const menu of contextMenus) {
-        chrome.contextMenus.update(
-          menu["id"],
-          {
-            visible: menu["active"],
-          }
-        );
-      }
-    });
+  chrome.storage.sync.get("contextMenus").then((items) => {
+    let contextMenus = null;
+    if (items && items.contextMenus) {
+      contextMenus = items.contextMenus;
+    } else {
+      contextMenus = defaultMenus;
+      console.log("update failed, fallback to default menu");
+    }
+    for (const menu of contextMenus) {
+      chrome.contextMenus.update(menu["id"], {
+        visible: menu["active"],
+      });
+    }
+  });
 }
 
 function runTaskOfClickedMenu(info, tab) {
@@ -83,12 +94,9 @@ function runTaskOfClickedMenu(info, tab) {
 }
 
 function copyLink(tab, task) {
-  chrome.scripting.executeScript(
-    {
-      target: { tabId: tab.id, allFrames: true },
-      args: [task],
-      func: Copy,
-    }
-  );
+  chrome.scripting.executeScript({
+    target: { tabId: tab.id, allFrames: true },
+    args: [task],
+    func: Copy,
+  });
 }
-

@@ -39,51 +39,56 @@ async function Copy(task) {
   }
 
   async function copyRichLink() {
-    const a = document.createElement("a");
-    a.href = location.href;
-    a.innerText = document.title;
-    await writeRichTextToClipboard(a);
+    await writeRichLinkToClipboard(location.href, document.title);
   }
 
   async function writeToClipboard(content) {
     try {
       await navigator.clipboard.writeText(content);
     } catch (e) {
-      console.debug("copying failed. Trying to fall back to execCommand('copy')");
+      console.debug(
+        "Copying failed. Trying to fall back to execCommand('copy')"
+      );
       const textArea = document.createElement("textArea");
       textArea.textContent = content;
       document.body.append(textArea);
       textArea.select();
-      document.execCommand('copy');
+      document.execCommand("copy");
       textArea.remove();
     }
   }
 
-  async function writeRichTextToClipboard(content) {
-    const htmlblob = new Blob([content.outerHTML], { type: "text/html" });
-    const textblob = new Blob([content.href], { type: "text/plain" });
+  async function writeRichLinkToClipboard(url, title) {
+    const div = document.createElement("div");
+    const a = document.createElement("a");
+    a.href = url;
+    a.innerText = title;
+    div.appendChild(a);
+    const htmlblob = new Blob([div.outerHTML], { type: "text/html" });
+    const textblob = new Blob([url], { type: "text/plain" });
     try {
       await navigator.clipboard.write([
         new ClipboardItem({
           [htmlblob.type]: htmlblob,
           [textblob.type]: textblob,
-        })
+        }),
       ]);
     } catch (e) {
       console.debug(e);
-      console.debug("copying failed. Trying to fall back to execCommand('copy')");
+      console.debug(
+        "copying failed. Trying to fall back to execCommand('copy')"
+      );
 
       function listener(event) {
         event.preventDefault();
-        event.clipboardData.setData("text/html", content.outerHTML);
-        event.clipboardData.setData("text/plain", content.href);
+        event.clipboardData.setData("text/html", div.outerHTML);
+        event.clipboardData.setData("text/plain", url);
       }
       document.addEventListener("copy", listener, { passive: false });
-      document.execCommand('copy');
+      document.execCommand("copy");
       document.removeEventListener("copy", listener);
     }
   }
-
 
   switch (task) {
     case "copyUrl":
@@ -112,4 +117,4 @@ async function Copy(task) {
   }
 }
 
-export { Copy }
+export { Copy };
