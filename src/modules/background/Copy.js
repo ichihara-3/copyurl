@@ -2,7 +2,9 @@
 // This script tend to run in the context of the user's tab
 // by chrome.scripting.executeScript().
 
-async function Copy(task) {
+async function Copy(task, showNotification = true) {
+  // Store showNotification in a variable visible to all internal functions
+  const shouldShowNotification = showNotification;
   async function copyUrl() {
     const content = location.href;
     await writeToClipboard(content);
@@ -43,6 +45,8 @@ async function Copy(task) {
   }
 
   function showCopySuccessNotification() {
+    // Don't show notification if disabled in options
+    if (!shouldShowNotification) return;
     let message = 'Copied!';
     try {
       const i18nMessage = chrome.i18n.getMessage('notification_copied');

@@ -1,5 +1,32 @@
 "use strict";
 
+// Initialize i18n for notification section
+document.getElementById('notification-options-title').textContent = chrome.i18n.getMessage('notification_options_title');
+document.getElementById('show-notification-label').textContent = chrome.i18n.getMessage('show_notification_label');
+document.getElementById('show-notification-description').textContent = chrome.i18n.getMessage('show_notification_description');
+
+// Load notification settings
+chrome.storage.sync.get({ showNotification: true }).then(({ showNotification }) => {
+  const notificationCheckbox = document.getElementById('show-notification');
+  notificationCheckbox.checked = showNotification;
+  
+  // Add event listener to save changes immediately
+  notificationCheckbox.addEventListener('change', () => {
+    chrome.storage.sync.set({ showNotification: notificationCheckbox.checked });
+  });
+  
+  // Add click listener to the entire row for the notification checkbox
+  const notificationWrapper = notificationCheckbox.closest('.control-wrapper');
+  if (notificationWrapper) {
+    notificationWrapper.addEventListener('click', function(event) {
+      if (event.target !== notificationCheckbox && event.target !== notificationWrapper.querySelector('label')) {
+        notificationCheckbox.checked = !notificationCheckbox.checked;
+        chrome.storage.sync.set({ showNotification: notificationCheckbox.checked });
+      }
+    });
+  }
+});
+
 // Load context menus and set up checkboxes
 chrome.storage.sync.get("contextMenus")
   .then((items) => {

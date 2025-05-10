@@ -71,5 +71,17 @@
   },
   "copyTitle_description": {
     "message": "Copies the TITLE of the page."
+  },
+  "notification_options_title": {
+    "message": "Notification Options"
+  },
+  "show_notification_label": {
+    "message": "Show copy notification"
+  },
+  "show_notification_description": {
+    "message": "Display a notification when content is copied to clipboard"
+  },
+  "notification_copied": {
+    "message": "Copied!"
   }
 }

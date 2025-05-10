@@ -46,6 +46,7 @@ You can also set your **preferred default format** for the toolbar icon click fr
 3. **Options** – in the extension's _Details_ page click **Extension options** to:
    - Turn menu items on/off
    - Set your preferred **default format** for toolbar icon clicks
+   - Toggle copy notifications on/off
 
 The clipboard write uses `navigator.clipboard.write*` with fallback to `document.execCommand('copy')` for maximum compatibility.
 

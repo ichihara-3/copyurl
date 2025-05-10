@@ -71,5 +71,17 @@
   },
   "copyTitle_description": {
     "message": "現在のページのタイトルのみを、クリップボードに保存します。"
+  },
+  "notification_options_title": {
+    "message": "通知オプション"
+  },
+  "show_notification_label": {
+    "message": "コピー通知を表示する"
+  },
+  "show_notification_description": {
+    "message": "コンテンツがクリップボードにコピーされたときに通知を表示する"
+  },
+  "notification_copied": {
+    "message": "コピーしました！"
   }
 }

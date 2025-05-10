@@ -1,7 +1,7 @@
 {
   "name": "COPY RICH URL",
   "description": "__MSG_description__",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "manifest_version": 3,
   "default_locale": "en",
   "background": {
@@ -12,7 +12,7 @@
   "action": {
     "default_title": "__MSG_default_title__"
   },
-  "permissions": ["contextMenus", "storage", "activeTab", "scripting", "notifications"],
+  "permissions": ["contextMenus", "storage", "activeTab", "scripting"],
   "icons": {
     "128": "img/copyurl_128.png"
   }

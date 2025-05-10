@@ -3,8 +3,9 @@
 import { Copy } from "./modules/background/Copy.js";
 import { menus as defaultMenus } from "./modules/background/menus.js";
 
-// Cache for the default format - initialized with default value
+// Cache for the default format and notification preference - initialized with default values
 let cachedDefaultFormat = 'copyRichLink';
+let cachedShowNotification = true;
 
 // initialize
 chrome.runtime.onInstalled.addListener(initializeExtension);
@@ -18,11 +19,17 @@ chrome.contextMenus.onClicked.addListener(runTaskOfClickedMenu);
 // use the default format from storage
 chrome.action.onClicked.addListener(tab => copyLink(tab, cachedDefaultFormat));
 
-// Listen for changes to the default format
+// Listen for changes to the default format and notification preference
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === 'sync' && changes.defaultFormat) {
-    cachedDefaultFormat = changes.defaultFormat.newValue;
-    console.log('Default format updated in cache:', cachedDefaultFormat);
+  if (area === 'sync') {
+    if (changes.defaultFormat) {
+      cachedDefaultFormat = changes.defaultFormat.newValue;
+      console.log('Default format updated in cache:', cachedDefaultFormat);
+    }
+    if (changes.showNotification) {
+      cachedShowNotification = changes.showNotification.newValue;
+      console.log('Notification preference updated in cache:', cachedShowNotification);
+    }
   }
 });
 // for debug convenience
@@ -50,15 +57,20 @@ function initializeExtension(details) {
 
 // Initialize the cache for better performance
 function initializeCache() {
-  // Load the default format from storage and store in memory cache
-  chrome.storage.sync.get({ defaultFormat: 'copyRichLink' })
-    .then(({ defaultFormat }) => {
+  // Load the default format and notification preference from storage and store in memory cache
+  chrome.storage.sync.get({ 
+    defaultFormat: 'copyRichLink',
+    showNotification: true
+  })
+    .then(({ defaultFormat, showNotification }) => {
       cachedDefaultFormat = defaultFormat;
+      cachedShowNotification = showNotification;
       console.log('Default format loaded into cache:', cachedDefaultFormat);
+      console.log('Notification preference loaded into cache:', cachedShowNotification);
     })
     .catch(error => {
-      console.error('Error loading default format:', error);
-      // Keep the initial default value in case of error
+      console.error('Error loading cache settings:', error);
+      // Keep the initial default values in case of error
     });
 }
 
@@ -136,7 +148,7 @@ async function copyLink(tab, task) {
   try {
     await chrome.scripting.executeScript({
       target: { tabId: tab.id, allFrames: true },
-      args: [task],
+      args: [task, cachedShowNotification], // Pass the notification preference
       func: Copy,
     });
   } catch (error) {
@@ -148,25 +160,11 @@ async function copyLink(tab, task) {
         errorMessage.includes("chrome://") ||
         errorMessage.includes("restricted url")) {
       
-      let title = 'Copy Failed';
-      let message = 'Could not copy from this page. Some pages, like the Chrome Web Store, restrict extensions.';
-      
-      try {
-        const i18nTitle = chrome.i18n.getMessage('notification_copy_failed_title');
-        if (i18nTitle) title = i18nTitle;
-        const i18nMessage = chrome.i18n.getMessage('notification_copy_failed_restricted_page');
-        if (i18nMessage) message = i18nMessage;
-      } catch (e) { /* Fallback to default messages if i18n fails */ }
-
-      chrome.notifications.create({
-        type: 'basic',
-        iconUrl: chrome.runtime.getURL('img/copyurl_128.png'), // Ensure this path is correct
-        title: title,
-        message: message,
-        priority: 0
-      });
+      console.error('Cannot copy from restricted page:', tab.url);
+      // We don't display a Chrome notification anymore as we've unified notifications
+      // Error handling is now done through console logging only
     } else {
-      // For other errors, you might want to log them or handle them differently
+      // For other errors, log them
       console.error('An unexpected error occurred during script execution:', error);
     }
   }
