@@ -24,9 +24,9 @@ chrome.storage.sync.get("contextMenus")
       // c.f. https://bugs.chromium.org/p/chromium/issues/detail?id=1268098
       // So adding some translations beside to English title
       if (chrome.i18n.getUILanguage().slice(0, 2) === "en") {
-        label.innerText = menu["title"];
+        label.innerText = menu["title"].replace(/&&/g, '&');
       } else {
-        label.innerText = menu["title"] + ` (${chrome.i18n.getMessage(menu.id)})`;
+        label.innerText = menu["title"].replace(/&&/g, '&') + ` (${chrome.i18n.getMessage(menu.id)})`;
       }
 
       const p = document.createElement("p");
@@ -85,9 +85,9 @@ chrome.storage.sync.get({ defaultFormat: 'copyRichLink' })
         label.htmlFor = `default-${menu.id}`;
         
         if (chrome.i18n.getUILanguage().slice(0, 2) === "en") {
-          label.innerText = menu["title"];
+          label.innerText = menu["title"].replace(/&&/g, '&');
         } else {
-          label.innerText = menu["title"] + ` (${chrome.i18n.getMessage(menu.id)})`;
+          label.innerText = menu["title"].replace(/&&/g, '&') + ` (${chrome.i18n.getMessage(menu.id)})`;
         }
         
         // No disabled styling, all formats are available for the icon click

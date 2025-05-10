@@ -118,7 +118,7 @@ async function Copy(task) {
     a.innerText = title;
     div.appendChild(a);
     const htmlblob = new Blob([div.outerHTML], { type: "text/html" });
-    const textblob = new Blob([url], { type: "text/plain" });
+    const textblob = new Blob([`${title} | ${url}`], { type: "text/plain" });
     try {
       await navigator.clipboard.write([
         new ClipboardItem({
