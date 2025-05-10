@@ -3,11 +3,33 @@
   <head>
     <title>COPY RICH URL Options</title>
     <link rel="stylesheet" href="options.css" />
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <h1>COPY RICH URL Options</h1>
-    <p>Select functions You Like!</p>
-    <div id="options"></div>
+    <div class="container">
+      <header>
+        <h1>Copy Rich URL Options</h1>
+        <p>Customize how links are copied to your clipboard</p>
+      </header>
+
+      <main>
+        <fieldset id="default-format">
+          <legend>Default Format for Icon Click</legend>
+          <div id="default-format-options"></div>
+        </fieldset>
+
+        <fieldset id="context-menu-options">
+          <legend>Context Menu Options</legend>
+          <p class="fieldset-description">Select which formats appear in your right-click menu</p>
+          <div id="options"></div>
+        </fieldset>
+      </main>
+
+      <footer>
+        <p>Copy Rich URL - Easily copy links in various formats</p>
+      </footer>
+    </div>
     <script src="options.js"></script>
   </body>
 </html>

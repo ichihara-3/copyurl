@@ -3,15 +3,27 @@
 import { Copy } from "./modules/background/Copy.js";
 import { menus as defaultMenus } from "./modules/background/menus.js";
 
+// Cache for the default format
+let cachedDefaultFormat = 'copyRichLink';
+
 // initialize
-chrome.runtime.onInstalled.addListener(initializeMenus);
+chrome.runtime.onInstalled.addListener(initializeExtension);
+chrome.runtime.onStartup.addListener(loadDefaultFormat);
+
 // for option change events
 chrome.runtime.onMessage.addListener(refreshMenus);
 // contextmenus click event
 chrome.contextMenus.onClicked.addListener(runTaskOfClickedMenu);
 // icon click event
-// run first action of the menus
-chrome.action.onClicked.addListener(tab => copyLink(tab, defaultMenus[0].id));
+// use the default format from storage
+chrome.action.onClicked.addListener(tab => copyLink(tab, cachedDefaultFormat));
+
+// Listen for changes to the default format
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'sync' && changes.defaultFormat) {
+    cachedDefaultFormat = changes.defaultFormat.newValue;
+  }
+});
 // for debug convenience
 // chrome.action.onClicked.addListener((tab) =>
 //   chrome.scripting.executeScript({
@@ -29,6 +41,18 @@ chrome.action.onClicked.addListener(tab => copyLink(tab, defaultMenus[0].id));
 //       }),
 //   })
 // );
+
+function initializeExtension(details) {
+  initializeMenus(details);
+  loadDefaultFormat();
+}
+
+function loadDefaultFormat() {
+  chrome.storage.sync.get({ defaultFormat: 'copyRichLink' })
+    .then(({ defaultFormat }) => {
+      cachedDefaultFormat = defaultFormat;
+    });
+}
 
 function initializeMenus(details) {
   chrome.storage.sync.get("contextMenus").then((items) => {
@@ -93,10 +117,42 @@ function runTaskOfClickedMenu(info, tab) {
   copyLink(tab, task);
 }
 
-function copyLink(tab, task) {
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id, allFrames: true },
-    args: [task],
-    func: Copy,
-  });
+async function copyLink(tab, task) {
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id, allFrames: true },
+      args: [task],
+      func: Copy,
+    });
+  } catch (error) {
+    console.warn(`Error executing script on tab ${tab.id}:`, error);
+    const errorMessage = error.message.toLowerCase();
+    // Check for common messages indicating restricted pages
+    if (errorMessage.includes("cannot access") || 
+        errorMessage.includes("cannot be scripted") || 
+        errorMessage.includes("chrome://") ||
+        errorMessage.includes("restricted url")) {
+      
+      let title = 'Copy Failed';
+      let message = 'Could not copy from this page. Some pages, like the Chrome Web Store, restrict extensions.';
+      
+      try {
+        const i18nTitle = chrome.i18n.getMessage('notification_copy_failed_title');
+        if (i18nTitle) title = i18nTitle;
+        const i18nMessage = chrome.i18n.getMessage('notification_copy_failed_restricted_page');
+        if (i18nMessage) message = i18nMessage;
+      } catch (e) { /* Fallback to default messages if i18n fails */ }
+
+      chrome.notifications.create({
+        type: 'basic',
+        iconUrl: chrome.runtime.getURL('img/copyurl_128.png'), // Ensure this path is correct
+        title: title,
+        message: message,
+        priority: 0
+      });
+    } else {
+      // For other errors, you might want to log them or handle them differently
+      console.error('An unexpected error occurred during script execution:', error);
+    }
+  }
 }

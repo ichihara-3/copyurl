@@ -42,9 +42,56 @@ async function Copy(task) {
     await writeRichLinkToClipboard(location.href, document.title);
   }
 
+  function showCopySuccessNotification() {
+    let message = 'Copied!';
+    try {
+      const i18nMessage = chrome.i18n.getMessage('notification_copied');
+      if (i18nMessage) {
+        message = i18nMessage;
+      }
+    } catch (e) {
+      // Fallback to default message if i18n is not available or key is missing
+    }
+
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    Object.assign(notification.style, {
+      position: 'fixed',
+      bottom: '20px', // Changed from top to bottom for less intrusion
+      right: '20px',
+      padding: '10px 20px',
+      backgroundColor: 'rgba(0, 0, 0, 0.75)',
+      color: 'white',
+      borderRadius: '5px',
+      zIndex: '2147483647', // Max z-index
+      fontSize: '14px',
+      opacity: '0',
+      transition: 'opacity 0.3s ease-in-out, bottom 0.3s ease-in-out'
+    });
+    document.body.appendChild(notification);
+
+    // Animate in
+    setTimeout(() => {
+      notification.style.opacity = '1';
+      notification.style.bottom = '30px';
+    }, 10);
+
+    // Animate out and remove
+    setTimeout(() => {
+      notification.style.opacity = '0';
+      notification.style.bottom = '20px';
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 300); // Corresponds to transition duration
+    }, 2000); // Display duration
+  }
+
   async function writeToClipboard(content) {
     try {
       await navigator.clipboard.writeText(content);
+      showCopySuccessNotification();
     } catch (e) {
       console.debug(
         "Copying failed. Trying to fall back to execCommand('copy')"
@@ -53,8 +100,14 @@ async function Copy(task) {
       textArea.textContent = content;
       document.body.append(textArea);
       textArea.select();
-      document.execCommand("copy");
+      let success = false;
+      try {
+        success = document.execCommand("copy");
+      } catch (err) { /* ignore */ }
       textArea.remove();
+      if (success) {
+        showCopySuccessNotification();
+      }
     }
   }
 
@@ -73,6 +126,7 @@ async function Copy(task) {
           [textblob.type]: textblob,
         }),
       ]);
+      showCopySuccessNotification();
     } catch (e) {
       console.debug(e);
       console.debug(
@@ -85,8 +139,14 @@ async function Copy(task) {
         event.clipboardData.setData("text/plain", url);
       }
       document.addEventListener("copy", listener, { passive: false });
-      document.execCommand("copy");
+      let success = false;
+      try {
+        success = document.execCommand("copy");
+      } catch (err) { /* ignore */ }
       document.removeEventListener("copy", listener);
+      if (success) {
+        showCopySuccessNotification();
+      }
     }
   }
 
