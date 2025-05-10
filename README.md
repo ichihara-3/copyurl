@@ -22,6 +22,9 @@ Chrome extension that lets you copy the current page URL (and title) in multiple
 
 Enable/disable each item from the **Options** page.
 
+You can also set your **preferred default format** for the toolbar icon click from the Options page.
+
+
 ---
 
 ## Demo & Screenshots
@@ -30,7 +33,8 @@ Enable/disable each item from the **Options** page.
 |---------|---------|
 | **One-click copy** from toolbar | ![Toolbar Demo](src/img/promo/screenshot5.jpeg) |
 | **Context menu** (Right-click) options | ![Context Menu](src/img/promo/screenshot2.png) |
-| **Options page** to enable/disable formats | ![Options](src/img/promo/screenshot3.png) ![Options](src/img/promo/screenshot4.png) |
+| **Options page** to enable/disable formats and set default format | ![Options](src/img/promo/screenshot3.png) ![Options](src/img/promo/screenshot4.png) |
+| **Setting default format** for toolbar icon click | ![Default Format Demo](src/img/default-format-demo.gif) |
 | **Rich text** pasted into Google Docs | ![Rich Text Demo](src/img/promo/screenshot1.png) |
 
 ---
@@ -39,7 +43,9 @@ Enable/disable each item from the **Options** page.
 
 1. **One-click** – press the extension icon to copy a rich-text link.
 2. **Context menu** – right-click anywhere on a page, open **Copy Rich URL**, and choose the desired format.
-3. **Options** – in the extension’s _Details_ page click **Extension options** to turn menu items on/off.
+3. **Options** – in the extension's _Details_ page click **Extension options** to:
+   - Turn menu items on/off
+   - Set your preferred **default format** for toolbar icon clicks
 
 The clipboard write uses `navigator.clipboard.write*` with fallback to `document.execCommand('copy')` for maximum compatibility.
 

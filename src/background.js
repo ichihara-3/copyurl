@@ -3,12 +3,12 @@
 import { Copy } from "./modules/background/Copy.js";
 import { menus as defaultMenus } from "./modules/background/menus.js";
 
-// Cache for the default format
+// Cache for the default format - initialized with default value
 let cachedDefaultFormat = 'copyRichLink';
 
 // initialize
 chrome.runtime.onInstalled.addListener(initializeExtension);
-chrome.runtime.onStartup.addListener(loadDefaultFormat);
+chrome.runtime.onStartup.addListener(initializeCache);
 
 // for option change events
 chrome.runtime.onMessage.addListener(refreshMenus);
@@ -22,6 +22,7 @@ chrome.action.onClicked.addListener(tab => copyLink(tab, cachedDefaultFormat));
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === 'sync' && changes.defaultFormat) {
     cachedDefaultFormat = changes.defaultFormat.newValue;
+    console.log('Default format updated in cache:', cachedDefaultFormat);
   }
 });
 // for debug convenience
@@ -44,13 +45,20 @@ chrome.storage.onChanged.addListener((changes, area) => {
 
 function initializeExtension(details) {
   initializeMenus(details);
-  loadDefaultFormat();
+  initializeCache();
 }
 
-function loadDefaultFormat() {
+// Initialize the cache for better performance
+function initializeCache() {
+  // Load the default format from storage and store in memory cache
   chrome.storage.sync.get({ defaultFormat: 'copyRichLink' })
     .then(({ defaultFormat }) => {
       cachedDefaultFormat = defaultFormat;
+      console.log('Default format loaded into cache:', cachedDefaultFormat);
+    })
+    .catch(error => {
+      console.error('Error loading default format:', error);
+      // Keep the initial default value in case of error
     });
 }
 
@@ -118,6 +126,13 @@ function runTaskOfClickedMenu(info, tab) {
 }
 
 async function copyLink(tab, task) {
+  // Safety check - if the task is not found in the menus, fallback to rich format
+  const isValidTask = defaultMenus.some(menu => menu.id === task);
+  if (!isValidTask) {
+    console.warn(`Task ${task} not found in menus. Falling back to copyRichLink.`);
+    task = 'copyRichLink';
+  }
+
   try {
     await chrome.scripting.executeScript({
       target: { tabId: tab.id, allFrames: true },

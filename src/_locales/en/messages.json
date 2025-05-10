@@ -6,6 +6,30 @@
   "default_title": {
     "message": "Just Click the icon to copy the URL. \nOr RIGHT CLICK in a page and select COPY RICH URL."
   },
+  "options_defaultFormat_title": {
+    "message": "Default Format for Icon Click"
+  },
+  "format_rich": {
+    "message": "Rich Text"
+  },
+  "format_url": {
+    "message": "URL Only"
+  },
+  "format_url_title": {
+    "message": "URL and Title"
+  },
+  "format_markdown": {
+    "message": "Markdown"
+  },
+  "format_html": {
+    "message": "HTML"
+  },
+  "format_html_title": {
+    "message": "HTML with Title"
+  },
+  "format_title": {
+    "message": "Title Only"
+  },
   "copyRichLink": {
     "message": "rich text link"
   },
@@ -13,7 +37,7 @@
     "message": "Copies the URL of a tab as a rich text link, so that you can paste the link with the title to your document(e.g. Google docs...) WITHOUT any editing."
   },
   "copyUrl": {
-    "message": "現在のページのURLcopy URL of this page"
+    "message": "copy URL of this page"
   },
   "copyUrl_description": {
     "message": "Copies only the URL of the page to the clipboard."

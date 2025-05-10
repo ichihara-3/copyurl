@@ -77,6 +77,10 @@ chrome.storage.sync.get({ defaultFormat: 'copyRichLink' })
         radio.value = menu.id;
         radio.checked = (menu.id === defaultFormat);
         
+        // Keep all radio buttons enabled regardless of context menu settings
+        // This allows users to select any format as default, even if disabled in context menu
+        radio.disabled = false;
+        
         const label = document.createElement("label");
         label.htmlFor = `default-${menu.id}`;
         
@@ -85,6 +89,8 @@ chrome.storage.sync.get({ defaultFormat: 'copyRichLink' })
         } else {
           label.innerText = menu["title"] + ` (${chrome.i18n.getMessage(menu.id)})`;
         }
+        
+        // No disabled styling, all formats are available for the icon click
         
         // Add description for the format option
         const p = document.createElement("p");
@@ -97,8 +103,10 @@ chrome.storage.sync.get({ defaultFormat: 'copyRichLink' })
         formatDiv.appendChild(controlWrapper);
         formatDiv.appendChild(p);
         
-        // Add click listener to the entire row for radio buttons
+        // Add click listener to the entire row for radio buttons - works for all items
         formatDiv.addEventListener('click', function(event) {
+          // No skip condition - all formats can be selected for icon click
+          
           if (event.target !== radio && event.target !== label) {
             if (!radio.checked) { // Only act if it's not already checked
               radio.checked = true;
@@ -113,11 +121,10 @@ chrome.storage.sync.get({ defaultFormat: 'copyRichLink' })
             chrome.storage.sync.set({ defaultFormat: radio.value });
           }
         });
-        
-        // Keep all radio buttons enabled regardless of context menu settings
-        radio.disabled = false;
-        label.classList.remove("disabled");
       }
+      
+      // Check if the currently selected default format is disabled and switch if needed
+      updateDefaultFormatSelection(contextMenus, defaultFormat);
     });
   });
 
@@ -138,7 +145,8 @@ function updateMenus() {
     });
 }
 
-// Helper function to ensure all default format options remain enabled
+// Helper function to update the default format radio buttons
+// Default format selection is independent from context menu enabled/disabled state
 function updateDefaultFormatOptions(contextMenus) {
   for (const menu of contextMenus) {
     const radio = document.getElementById(`default-${menu.id}`);
@@ -149,27 +157,31 @@ function updateDefaultFormatOptions(contextMenus) {
       radio.disabled = false;
       
       if (label) {
+        // Remove any disabled styling
         label.classList.remove("disabled");
       }
     }
   }
-  
-  // If the currently selected default format is now disabled, switch to the first enabled format
-  chrome.storage.sync.get({ defaultFormat: 'copyRichLink' }, ({ defaultFormat }) => {
-    const selectedMenu = contextMenus.find(menu => menu.id === defaultFormat);
+}
+
+// Helper function to update the default format selection if needed
+// This is now only used to validate that the format exists in the menu system
+function updateDefaultFormatSelection(contextMenus, defaultFormat) {
+  const selectedMenu = contextMenus.find(menu => menu.id === defaultFormat);
     
-    if (selectedMenu && !selectedMenu.active) {
-      const firstEnabledMenu = contextMenus.find(menu => menu.active);
+  // Only switch if the format isn't found in the menus array
+  if (!selectedMenu) {
+    const firstMenu = contextMenus[0]; // Just use the first available menu
+    
+    if (firstMenu) {
+      console.warn(`Default format "${defaultFormat}" is not found. Switching to "${firstMenu.id}".`);
+      chrome.storage.sync.set({ defaultFormat: firstMenu.id });
       
-      if (firstEnabledMenu) {
-        chrome.storage.sync.set({ defaultFormat: firstEnabledMenu.id });
-        
-        // Update the checked state of radio buttons
-        const radios = document.querySelectorAll('input[name="defaultFormat"]');
-        radios.forEach(r => {
-          r.checked = (r.value === firstEnabledMenu.id);
-        });
-      }
+      // Update the checked state of radio buttons
+      const radios = document.querySelectorAll('input[name="defaultFormat"]');
+      radios.forEach(r => {
+        r.checked = (r.value === firstMenu.id);
+      });
     }
-  });
+  }
 }

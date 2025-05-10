@@ -6,6 +6,30 @@
   "default_title": {
     "message": "アイコンクリックでページのURLをコピー！\nまたは、ページ内で右クリックして、COPY RICH URLを選択してください。"
   },
+  "options_defaultFormat_title": {
+    "message": "アイコンクリック時のデフォルト形式"
+  },
+  "format_rich": {
+    "message": "リッチテキスト"
+  },
+  "format_url": {
+    "message": "URLのみ"
+  },
+  "format_url_title": {
+    "message": "URLとタイトル"
+  },
+  "format_markdown": {
+    "message": "マークダウン形式"
+  },
+  "format_html": {
+    "message": "HTML形式"
+  },
+  "format_html_title": {
+    "message": "HTML形式（タイトル付き）"
+  },
+  "format_title": {
+    "message": "タイトルのみ"
+  },
   "copyRichLink": {
     "message": "リッチテキスト形式"
   },
