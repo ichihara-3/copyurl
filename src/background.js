@@ -81,19 +81,16 @@ function initializeMenus(details) {
     if (items && items.contextMenus) {
       for (const menu of items.contextMenus) {
         if (menu.active !== undefined) {
-          for (const contextMenu of contextMenus) {
-            if (contextMenu.id === menu.id) {
-              contextMenu.active = menu.active;
-              break;
-            }
+          const target = contextMenus.find((m) => m.id === menu.id);
+          if (target) {
+            target.active = menu.active;
           }
-          break;
         }
       }
     }
     chrome.storage.sync
       .set({ contextMenus })
-      .then(createContextMenus(contextMenus));
+      .then(() => createContextMenus(contextMenus));
   });
 }
 
