@@ -1,5 +1,5 @@
 "use strict";
-// This script tend to run in the context of the user's tab
+// This script tends to run in the context of the user's tab
 // by chrome.scripting.executeScript().
 
 async function Copy(task, showNotification = true) {
