@@ -71,6 +71,13 @@ $ ./zip_artifacts.sh
 ```
 Requires the `jq` command-line tool to read the version from `manifest.json`.
 
+### Run tests
+
+```bash
+$ npm install
+$ npm test
+```
+
 ---
 
 ## Project structure (major files)
