@@ -7,31 +7,32 @@ import { menus as defaultMenus } from "./modules/background/menus.js";
 let cachedDefaultFormat = 'copyRichLink';
 let cachedShowNotification = true;
 
-// initialize
-chrome.runtime.onInstalled.addListener(initializeExtension);
-chrome.runtime.onStartup.addListener(initializeCache);
+// initialize if chrome API is available (allows importing in test environment)
+if (typeof chrome !== 'undefined') {
+  chrome.runtime.onInstalled.addListener(initializeExtension);
+  chrome.runtime.onStartup.addListener(initializeCache);
 
-// for option change events
-chrome.runtime.onMessage.addListener(refreshMenus);
-// contextmenus click event
-chrome.contextMenus.onClicked.addListener(runTaskOfClickedMenu);
-// icon click event
-// use the default format from storage
-chrome.action.onClicked.addListener(tab => copyLink(tab, cachedDefaultFormat));
+  // for option change events
+  chrome.runtime.onMessage.addListener(refreshMenus);
+  // contextmenus click event
+  chrome.contextMenus.onClicked.addListener(runTaskOfClickedMenu);
+  // icon click event - use the default format from storage
+  chrome.action.onClicked.addListener(tab => copyLink(tab, cachedDefaultFormat));
 
-// Listen for changes to the default format and notification preference
-chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === 'sync') {
-    if (changes.defaultFormat) {
-      cachedDefaultFormat = changes.defaultFormat.newValue;
-      console.log('Default format updated in cache:', cachedDefaultFormat);
+  // Listen for changes to the default format and notification preference
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'sync') {
+      if (changes.defaultFormat) {
+        cachedDefaultFormat = changes.defaultFormat.newValue;
+        console.log('Default format updated in cache:', cachedDefaultFormat);
+      }
+      if (changes.showNotification) {
+        cachedShowNotification = changes.showNotification.newValue;
+        console.log('Notification preference updated in cache:', cachedShowNotification);
+      }
     }
-    if (changes.showNotification) {
-      cachedShowNotification = changes.showNotification.newValue;
-      console.log('Notification preference updated in cache:', cachedShowNotification);
-    }
-  }
-});
+  });
+}
 // for debug convenience
 // chrome.action.onClicked.addListener((tab) =>
 //   chrome.scripting.executeScript({
