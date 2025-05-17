@@ -5,6 +5,18 @@
 async function Copy(task, showNotification = true) {
   // Store showNotification in a variable visible to all internal functions
   const shouldShowNotification = showNotification;
+
+  async function recordHistory() {
+    try {
+      await chrome.runtime.sendMessage({
+        type: 'addHistory',
+        url: location.href,
+        title: document.title
+      });
+    } catch (e) {
+      console.debug('failed to record history', e);
+    }
+  }
   async function copyUrl() {
     const content = location.href;
     await writeToClipboard(content);
@@ -179,6 +191,8 @@ async function Copy(task, showNotification = true) {
     default:
       console.debug("not implemented");
   }
+
+  await recordHistory();
 }
 
 export { Copy };

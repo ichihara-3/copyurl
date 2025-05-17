@@ -19,6 +19,7 @@ Chrome extension that lets you copy the current page URL (and title) in multiple
 | **HTML link** | `<a href="https://example.com">https://example.com</a>` | `<a href="https://example.com">https://example.com</a>` |
 | **HTML link + title** | `<a href="https://example.com">Example Site</a>` | `<a href="https://example.com">Example Site</a>` |
 | **Title only** | `Example Site` | Example Site |
+| **Copy history** | View recent copies in the options page | |
 
 Enable/disable each item from the **Options** page.
 

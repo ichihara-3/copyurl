@@ -2,6 +2,7 @@
 
 import { Copy } from "./modules/background/Copy.js";
 import { menus as defaultMenus } from "./modules/background/menus.js";
+import { addToHistory } from "./modules/background/history.js";
 
 // Cache for the default format and notification preference - initialized with default values
 let cachedDefaultFormat = 'copyRichLink';
@@ -13,6 +14,7 @@ chrome.runtime.onStartup.addListener(initializeCache);
 
 // for option change events
 chrome.runtime.onMessage.addListener(refreshMenus);
+chrome.runtime.onMessage.addListener(handleHistoryMessage);
 // contextmenus click event
 chrome.contextMenus.onClicked.addListener(runTaskOfClickedMenu);
 // icon click event
@@ -130,6 +132,14 @@ function updateContextMenus() {
       });
     }
   });
+}
+
+function handleHistoryMessage(message, sender, sendResponse) {
+  if (message.type !== 'addHistory') return;
+  addToHistory({ url: message.url, title: message.title })
+    .then(() => sendResponse({ result: 'added' }))
+    .catch(() => sendResponse({ result: 'error' }));
+  return true;
 }
 
 function runTaskOfClickedMenu(info, tab) {
