@@ -70,6 +70,13 @@ $ ./zip_artifacts.sh
 # → copyurl_<version>.zip generated in project root
 ```
 
+### Run tests
+
+```bash
+$ npm install
+$ npm test
+```
+
 ---
 
 ## Project structure (major files)

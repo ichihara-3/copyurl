@@ -1,0 +1,13 @@
+{
+  "name": "copyurl",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.22.0",
+    "babel-jest": "^29.6.0",
+    "jest": "^29.6.0"
+  }
+}
