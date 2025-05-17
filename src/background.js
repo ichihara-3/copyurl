@@ -86,7 +86,6 @@ function initializeMenus(details) {
               break;
             }
           }
-          break;
         }
       }
     }
