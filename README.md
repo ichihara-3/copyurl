@@ -69,6 +69,7 @@ $ cd copyurl/src
 $ ./zip_artifacts.sh
 # → copyurl_<version>.zip generated in project root
 ```
+Requires the `jq` command-line tool to read the version from `manifest.json`.
 
 ---
 
@@ -85,6 +86,12 @@ src/
 └─ _locales/{en,ja}/       # i18n messages
 zip_artifacts.sh           # helper to build release zip
 ```
+
+## Limitations
+
+Copying does not work on Chrome's built-in pages like `chrome://` or the Web Store.
+These pages restrict script execution, so the extension cannot access the
+clipboard there.
 
 ---
 
