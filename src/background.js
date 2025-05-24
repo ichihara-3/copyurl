@@ -18,6 +18,8 @@ if (typeof chrome !== 'undefined') {
   chrome.contextMenus.onClicked.addListener(runTaskOfClickedMenu);
   // icon click event - use the default format from storage
   chrome.action.onClicked.addListener(tab => copyLink(tab, cachedDefaultFormat));
+  // keyboard shortcuts via commands API
+  chrome.commands.onCommand.addListener(runCommandShortcut);
 
   // Listen for changes to the default format and notification preference
   chrome.storage.onChanged.addListener((changes, area) => {
@@ -132,6 +134,35 @@ function updateContextMenus() {
 
 function runTaskOfClickedMenu(info, tab) {
   const task = info.menuItemId;
+  copyLink(tab, task);
+}
+
+async function runCommandShortcut(command) {
+  // Get the current active tab
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  
+  if (!tab) {
+    console.warn('No active tab found for keyboard shortcut');
+    return;
+  }
+
+  // Map command names to menu IDs
+  let task;
+  switch (command) {
+    case 'copy-rich-link':
+      task = 'copyRichLink';
+      break;
+    case 'copy-url-only':
+      task = 'copyUrl';
+      break;
+    case 'copy-markdown':
+      task = 'copyUrlWithTitleAsMarkdown';
+      break;
+    default:
+      console.warn(`Unknown command: ${command}`);
+      return;
+  }
+
   copyLink(tab, task);
 }
 
