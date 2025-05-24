@@ -140,7 +140,7 @@ async function Copy(task, showNotification = true) {
       function listener(event) {
         event.preventDefault();
         event.clipboardData.setData("text/html", div.outerHTML);
-        event.clipboardData.setData("text/plain", url);
+        event.clipboardData.setData("text/plain", `${title} | ${url}`);
       }
       document.addEventListener("copy", listener, { passive: false });
       let success = false;
