@@ -10,7 +10,8 @@
   },
   "options_page": "options/index.html",
   "action": {
-    "default_title": "__MSG_default_title__"
+    "default_title": "__MSG_default_title__",
+    "default_popup": "popup/index.html"
   },
   "permissions": ["contextMenus", "storage", "activeTab", "scripting"],
   "icons": {

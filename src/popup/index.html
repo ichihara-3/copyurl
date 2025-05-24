@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Copy URL</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <header class="popup-header">
+      <h2 class="popup-title">Copy URL</h2>
+    </header>
+    
+    <div class="current-page-info">
+      <div class="page-title" id="pageTitle">Loading...</div>
+      <div class="page-url" id="pageUrl">Loading...</div>
+    </div>
+
+    <div class="recent-formats" id="recentFormats" style="display: none;">
+      <h3 class="section-title">Recent Formats</h3>
+      <div class="format-buttons recent" id="recentFormatButtons"></div>
+    </div>
+
+    <div class="all-formats">
+      <h3 class="section-title">All Formats</h3>
+      <div class="format-buttons" id="allFormatButtons"></div>
+    </div>
+
+    <div class="preview-section" id="previewSection" style="display: none;">
+      <h3 class="section-title">Preview</h3>
+      <div class="preview-content" id="previewContent"></div>
+    </div>
+
+    <footer class="popup-footer">
+      <button class="options-button" id="optionsButton">Options</button>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
