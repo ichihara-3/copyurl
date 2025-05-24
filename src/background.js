@@ -152,18 +152,68 @@ async function copyLink(tab, task) {
   } catch (error) {
     console.warn(`Error executing script on tab ${tab.id}:`, error);
     const errorMessage = error.message.toLowerCase();
+    
     // Check for common messages indicating restricted pages
     if (errorMessage.includes("cannot access") || 
         errorMessage.includes("cannot be scripted") || 
         errorMessage.includes("chrome://") ||
-        errorMessage.includes("restricted url")) {
+        errorMessage.includes("chrome-extension://") ||
+        errorMessage.includes("moz-extension://") ||
+        errorMessage.includes("restricted url") ||
+        errorMessage.includes("extensions cannot be scripted")) {
       
       console.error('Cannot copy from restricted page:', tab.url);
-      // We don't display a Chrome notification anymore as we've unified notifications
-      // Error handling is now done through console logging only
+      
+      // Show Chrome notification for restricted pages when notifications are enabled
+      if (cachedShowNotification) {
+        try {
+          let notificationMessage = 'Cannot copy from this page';
+          try {
+            const i18nMessage = chrome.i18n.getMessage('notification_error_restricted');
+            if (i18nMessage) {
+              notificationMessage = i18nMessage;
+            }
+          } catch (e) {
+            // Use fallback message
+          }
+
+          chrome.notifications.create({
+            type: 'basic',
+            iconUrl: 'img/copyurl_128.png',
+            title: 'CopyURL',
+            message: notificationMessage
+          });
+        } catch (notificationError) {
+          console.warn('Failed to show notification:', notificationError);
+        }
+      }
     } else {
       // For other errors, log them
       console.error('An unexpected error occurred during script execution:', error);
+      
+      // Show generic error notification if notifications are enabled
+      if (cachedShowNotification) {
+        try {
+          let notificationMessage = 'Failed to copy to clipboard';
+          try {
+            const i18nMessage = chrome.i18n.getMessage('notification_error_clipboard');
+            if (i18nMessage) {
+              notificationMessage = i18nMessage;
+            }
+          } catch (e) {
+            // Use fallback message
+          }
+
+          chrome.notifications.create({
+            type: 'basic',
+            iconUrl: 'img/copyurl_128.png',
+            title: 'CopyURL',
+            message: notificationMessage
+          });
+        } catch (notificationError) {
+          console.warn('Failed to show notification:', notificationError);
+        }
+      }
     }
   }
 }
