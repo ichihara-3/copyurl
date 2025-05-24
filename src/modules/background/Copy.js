@@ -5,43 +5,92 @@
 async function Copy(task, showNotification = true) {
   // Store showNotification in a variable visible to all internal functions
   const shouldShowNotification = showNotification;
+
+  // Sanitization functions to prevent XSS and injection attacks
+  function sanitizeTitle(title) {
+    if (typeof title !== 'string') {
+      return '';
+    }
+    // Remove control characters, null bytes, and trim whitespace
+    return title
+      .replace(/[\x00-\x1F\x7F-\x9F]/g, '') // Remove control characters
+      .replace(/\u0000/g, '') // Remove null bytes
+      .trim()
+      .substring(0, 1000); // Limit length to prevent extremely long titles
+  }
+
+  function sanitizeUrl(url) {
+    if (typeof url !== 'string') {
+      return '';
+    }
+    try {
+      // Parse URL to validate it and get normalized version
+      const parsedUrl = new URL(url);
+      // Only allow http, https, and file protocols for security
+      if (!['http:', 'https:', 'file:'].includes(parsedUrl.protocol)) {
+        return '';
+      }
+      return parsedUrl.href;
+    } catch (e) {
+      // If URL parsing fails, return empty string
+      return '';
+    }
+  }
+
+  function escapeHtml(text) {
+    if (typeof text !== 'string') {
+      return '';
+    }
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
   async function copyUrl() {
-    const content = location.href;
+    const content = sanitizeUrl(location.href);
     await writeToClipboard(content);
   }
 
   async function copyUrlWithTitleAsText() {
-    const content = `${document.title} | ${location.href}`;
+    const title = sanitizeTitle(document.title);
+    const url = sanitizeUrl(location.href);
+    const content = `${title} | ${url}`;
     await writeToClipboard(content);
   }
 
   async function copyUrlWithTitleAsMarkdown() {
-    const content = `[${document.title}](${location.href})`;
+    const title = sanitizeTitle(document.title);
+    const url = sanitizeUrl(location.href);
+    const content = `[${title}](${url})`;
     await writeToClipboard(content);
   }
 
   async function copyUrlAsHtml() {
+    const url = sanitizeUrl(location.href);
     const a = document.createElement("a");
-    a.href = location.href;
+    a.href = url;
     const content = a.outerHTML;
     await writeToClipboard(content);
   }
 
   async function copyUrlWithTitleAsHtml() {
+    const title = sanitizeTitle(document.title);
+    const url = sanitizeUrl(location.href);
     const a = document.createElement("a");
-    a.href = location.href;
-    a.innerText = document.title;
+    a.href = url;
+    a.innerText = title;
     const content = a.outerHTML;
     await writeToClipboard(content);
   }
 
   async function copyTitle() {
-    const content = document.title;
+    const content = sanitizeTitle(document.title);
     await writeToClipboard(content);
   }
 
   async function copyRichLink() {
-    await writeRichLinkToClipboard(location.href, document.title);
+    const title = sanitizeTitle(document.title);
+    const url = sanitizeUrl(location.href);
+    await writeRichLinkToClipboard(url, title);
   }
 
   function showCopySuccessNotification() {
@@ -116,6 +165,7 @@ async function Copy(task, showNotification = true) {
   }
 
   async function writeRichLinkToClipboard(url, title) {
+    // Note: url and title are already sanitized by the caller
     const div = document.createElement("div");
     const a = document.createElement("a");
     a.href = url;
