@@ -6,9 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Install dependencies**: `npm install`
 - **Run tests**: `npm test`
+- **Lint code**: `npm run lint` (check for issues) or `npm run lint:fix` (auto-fix)
+- **Format code**: `npm run format` (auto-format) or `npm run format:check` (check only)
+- **Build extension**: `npm run build` (production) or `npm run build:dev` (development)
+- **Watch mode**: `npm run build:watch` (rebuild on changes)
+- **Create distribution**: `npm run dist` (lint + format + test + build + zip)
 - **Create distribution zip**: `./zip_artifacts.sh` (requires `jq` command)
 
-Before committing changes, ensure all tests pass with `npm test`.
+Before committing changes, ensure all tests pass with `npm test` and code is properly formatted with `npm run format:check`. The pre-commit hooks will automatically run linting and formatting checks.
 
 ## Architecture Overview
 
@@ -40,3 +45,19 @@ Jest is configured with Node.js environment. The test setup in `tests/setup.js` 
 ### Internationalization
 
 Uses Chrome extension i18n with messages in `src/_locales/{en,ja}/messages.json`. The manifest uses `__MSG_*__` placeholders for localized strings.
+
+### Build System
+
+The project uses Webpack for bundling and minification:
+- **Source**: Files in `src/` directory
+- **Output**: Built files in `dist/` directory
+- **Minification**: JavaScript and CSS are minified in production mode
+- **Development**: Source maps enabled for debugging
+- **Assets**: Static files (manifest, images, locales) are copied to dist
+
+### Code Quality Tools
+
+- **ESLint**: Configured with Chrome extension and ES6+ rules
+- **Prettier**: Code formatting with consistent style
+- **Husky**: Git hooks for pre-commit checks
+- **lint-staged**: Runs linting and formatting on staged files only
