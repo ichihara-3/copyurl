@@ -18,9 +18,26 @@ chrome.storage.sync.get({ showNotification: true }).then(({ showNotification }) 
   // Add click listener to the entire row for the notification checkbox
   const notificationWrapper = notificationCheckbox.closest('.control-wrapper');
   if (notificationWrapper) {
+    // Make the wrapper keyboard accessible
+    notificationWrapper.setAttribute('tabindex', '0');
+    notificationWrapper.setAttribute('role', 'button');
+    notificationWrapper.setAttribute('aria-pressed', notificationCheckbox.checked);
+    notificationWrapper.classList.add('clickable-row');
+    
     notificationWrapper.addEventListener('click', function(event) {
       if (event.target !== notificationCheckbox && event.target !== notificationWrapper.querySelector('label')) {
         notificationCheckbox.checked = !notificationCheckbox.checked;
+        notificationWrapper.setAttribute('aria-pressed', notificationCheckbox.checked);
+        chrome.storage.sync.set({ showNotification: notificationCheckbox.checked });
+      }
+    });
+    
+    // Add keyboard support
+    notificationWrapper.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        notificationCheckbox.checked = !notificationCheckbox.checked;
+        notificationWrapper.setAttribute('aria-pressed', notificationCheckbox.checked);
         chrome.storage.sync.set({ showNotification: notificationCheckbox.checked });
       }
     });
@@ -44,6 +61,7 @@ chrome.storage.sync.get("contextMenus")
       checkbox.type = "checkbox";
       checkbox.id = menu["id"];
       checkbox.checked = menu["active"];
+      checkbox.setAttribute('aria-describedby', `${menu.id}_description`);
 
       const label = document.createElement("label");
       label.htmlFor = menu["id"]; // Fix: use htmlFor instead of for
@@ -58,6 +76,7 @@ chrome.storage.sync.get("contextMenus")
 
       const p = document.createElement("p");
       p.className = "description";
+      p.id = `${menu.id}_description`;
       p.innerText = chrome.i18n.getMessage(`${menu.id}_description`);
 
       controlWrapper.appendChild(checkbox);
@@ -66,15 +85,33 @@ chrome.storage.sync.get("contextMenus")
       menuDiv.appendChild(controlWrapper);
       menuDiv.appendChild(p);
 
+      // Make the menu div keyboard accessible
+      menuDiv.setAttribute('tabindex', '0');
+      menuDiv.setAttribute('role', 'button');
+      menuDiv.setAttribute('aria-pressed', checkbox.checked);
+      menuDiv.classList.add('clickable-row');
+
       // Add click listener to the entire row for checkboxes
       menuDiv.addEventListener('click', function(event) {
         if (event.target !== checkbox && event.target !== label) {
           checkbox.checked = !checkbox.checked;
+          menuDiv.setAttribute('aria-pressed', checkbox.checked);
           updateMenus(); // Ensure storage and context menus are updated
+        }
+      });
+      
+      // Add keyboard support for menu div
+      menuDiv.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          checkbox.checked = !checkbox.checked;
+          menuDiv.setAttribute('aria-pressed', checkbox.checked);
+          updateMenus();
         }
       });
 
       checkbox.addEventListener("change", (event) => {
+        menuDiv.setAttribute('aria-pressed', checkbox.checked);
         updateMenus();
       })
     }
@@ -103,6 +140,7 @@ chrome.storage.sync.get({ defaultFormat: 'copyRichLink' })
         radio.name = "defaultFormat";
         radio.value = menu.id;
         radio.checked = (menu.id === defaultFormat);
+        radio.setAttribute('aria-describedby', `default-${menu.id}_description`);
         
         // Keep all radio buttons enabled regardless of context menu settings
         // This allows users to select any format as default, even if disabled in context menu
@@ -122,6 +160,7 @@ chrome.storage.sync.get({ defaultFormat: 'copyRichLink' })
         // Add description for the format option
         const p = document.createElement("p");
         p.className = "description";
+        p.id = `default-${menu.id}_description`;
         p.innerText = chrome.i18n.getMessage(`${menu.id}_description`);
         
         controlWrapper.appendChild(radio);
@@ -130,6 +169,12 @@ chrome.storage.sync.get({ defaultFormat: 'copyRichLink' })
         formatDiv.appendChild(controlWrapper);
         formatDiv.appendChild(p);
         
+        // Make the format div keyboard accessible
+        formatDiv.setAttribute('tabindex', '0');
+        formatDiv.setAttribute('role', 'button');
+        formatDiv.setAttribute('aria-pressed', radio.checked);
+        formatDiv.classList.add('clickable-row');
+        
         // Add click listener to the entire row for radio buttons - works for all items
         formatDiv.addEventListener('click', function(event) {
           // No skip condition - all formats can be selected for icon click
@@ -137,6 +182,33 @@ chrome.storage.sync.get({ defaultFormat: 'copyRichLink' })
           if (event.target !== radio && event.target !== label) {
             if (!radio.checked) { // Only act if it's not already checked
               radio.checked = true;
+              formatDiv.setAttribute('aria-pressed', true);
+              // Update all other radio buttons' aria-pressed state
+              const allFormatDivs = document.querySelectorAll('#default-format-options .clickable-row');
+              allFormatDivs.forEach(div => {
+                if (div !== formatDiv) {
+                  div.setAttribute('aria-pressed', false);
+                }
+              });
+              chrome.storage.sync.set({ defaultFormat: radio.value });
+            }
+          }
+        });
+        
+        // Add keyboard support for format div
+        formatDiv.addEventListener('keydown', function(event) {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            if (!radio.checked) {
+              radio.checked = true;
+              formatDiv.setAttribute('aria-pressed', true);
+              // Update all other radio buttons' aria-pressed state
+              const allFormatDivs = document.querySelectorAll('#default-format-options .clickable-row');
+              allFormatDivs.forEach(div => {
+                if (div !== formatDiv) {
+                  div.setAttribute('aria-pressed', false);
+                }
+              });
               chrome.storage.sync.set({ defaultFormat: radio.value });
             }
           }
@@ -145,6 +217,14 @@ chrome.storage.sync.get({ defaultFormat: 'copyRichLink' })
         // Add event listener to save changes immediately
         radio.addEventListener("change", () => {
           if (radio.checked) {
+            formatDiv.setAttribute('aria-pressed', true);
+            // Update all other radio buttons' aria-pressed state
+            const allFormatDivs = document.querySelectorAll('#default-format-options .clickable-row');
+            allFormatDivs.forEach(div => {
+              if (div !== formatDiv) {
+                div.setAttribute('aria-pressed', false);
+              }
+            });
             chrome.storage.sync.set({ defaultFormat: radio.value });
           }
         });
