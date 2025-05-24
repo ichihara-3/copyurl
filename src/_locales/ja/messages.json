@@ -83,5 +83,14 @@
   },
   "notification_copied": {
     "message": "コピーしました！"
+  },
+  "notification_error_clipboard": {
+    "message": "クリップボードへのコピーに失敗しました"
+  },
+  "notification_error_restricted": {
+    "message": "このページからはコピーできません"
+  },
+  "notification_error_permission": {
+    "message": "クリップボードアクセスが拒否されました"
   }
 }

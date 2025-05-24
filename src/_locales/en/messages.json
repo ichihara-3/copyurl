@@ -83,5 +83,14 @@
   },
   "notification_copied": {
     "message": "Copied!"
+  },
+  "notification_error_clipboard": {
+    "message": "Failed to copy to clipboard"
+  },
+  "notification_error_restricted": {
+    "message": "Cannot copy from this page"
+  },
+  "notification_error_permission": {
+    "message": "Clipboard access denied"
   }
 }
