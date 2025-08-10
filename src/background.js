@@ -76,7 +76,8 @@ function initializeCache() {
 }
 
 function initializeMenus(details) {
-  chrome.storage.sync.get("contextMenus").then((items) => {
+  // Return the promise chain so callers (and tests) can await completion
+  return chrome.storage.sync.get("contextMenus").then((items) => {
     let contextMenus = defaultMenus;
     if (items && items.contextMenus) {
       for (const menu of items.contextMenus) {
@@ -88,9 +89,12 @@ function initializeMenus(details) {
         }
       }
     }
-    chrome.storage.sync
+    return chrome.storage.sync
       .set({ contextMenus })
-      .then(() => createContextMenus(contextMenus));
+      .then(() => {
+        createContextMenus(contextMenus);
+        return contextMenus;
+      });
   });
 }
 
