@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "jest"
+    "test": "jest --runInBand"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.0",
