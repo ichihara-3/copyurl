@@ -40,3 +40,22 @@ Jest is configured with Node.js environment. The test setup in `tests/setup.js` 
 ### Internationalization
 
 Uses Chrome extension i18n with messages in `src/_locales/{en,ja}/messages.json`. The manifest uses `__MSG_*__` placeholders for localized strings.
+
+## CI Troubleshooting (Playbook)
+
+- Always start with GitHub CLI:
+  - `gh pr checks <pr-number>` to see failing jobs and links.
+  - `gh run view <run-id> --job <job-id> --log` to read the failing step output.
+
+- Common issues and fixes:
+  - Missing lockfile with `npm ci` → commit `package-lock.json`.
+  - Jest worker shutdown error (e.g., `kill EPERM`) in restricted runners → run tests in-band (`jest --runInBand`) in the CI workflow.
+  - Node version mismatch → align to CI Node 20; locally use `nvm use 20` (consider `.nvmrc`).
+
+- Local reproduction checklist:
+  - `nvm use 20` (or install Node 20).
+  - `npm ci` then `npm test` (or `jest --ci --runInBand` to mirror CI).
+
+- PR hygiene:
+  - Keep changes minimal and targeted.
+  - Update PR description with summary, rationale, testing, and risk.

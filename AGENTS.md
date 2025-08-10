@@ -1,6 +1,6 @@
 # AGENT Instructions
 
-This repository contains a Chrome extension built with Node.js. Please follow these guidelines when updating the repository:
+This repository contains a Chrome extension built with Node.js. Please follow these guidelines when updating the repository. The points below are the default operating procedures for agents working on this repo.
 
 1. **Run Tests**
    - Install dependencies with `npm install` if needed.
@@ -12,6 +12,26 @@ This repository contains a Chrome extension built with Node.js. Please follow th
 3. **General Notes**
    - Do not commit `node_modules` or other generated files.
    - Distribution zips can be created via `./zip_artifacts.sh` but are not required for pull requests.
+
+## CI-First Triage (Agent SOP)
+- Use `gh` to inspect CI immediately:
+  - `gh pr checks <number>` to see failing jobs.
+  - `gh run view <run-id> --job <job-id> --log` to read exact errors.
+- Mirror CI locally before changes:
+  - Use Node 20, run `npm ci`, then `jest --ci --runInBand` if needed to reproduce.
+- Push fixes without prompting when safe and scoped (tests/docs/config). Update the PR description as part of the fix.
+
+## CI Stability Guidelines
+- Lockfile policy: commit `package-lock.json` so CI can run `npm ci` and benefit from caching.
+- Jest in sandboxes: when CI environments restrict process signals, prefer running Jest in-band:
+  - Either set `jest --runInBand` in the workflow step, or in the `npm test` script if acceptable.
+- Node parity: keep local Node aligned with CI (Node 20). Optionally use an `.nvmrc` to standardize locally.
+
+## Pull Request Checklist (Agent)
+- Verify locally: `npm ci && npm test`.
+- If fixing CI: diagnose via `gh`, apply minimal change, commit, push, and re-check `gh pr checks` until green.
+- Update PR body with summary, rationale, risks, and modified files.
+- Avoid adding new permissions to `manifest.json` without justification.
 # Repository Guidelines
 
 This repository hosts a Chrome extension (Manifest V3) that copies the current page URL and title in multiple formats (rich text, Markdown, HTML, etc.). Use this guide to develop, test, and contribute changes efficiently.
@@ -55,4 +75,3 @@ This repository hosts a Chrome extension (Manifest V3) that copies the current p
 - Keep permissions in `manifest.json` minimal; avoid new permissions without justification.
 - Clipboard operations must handle restricted pages gracefully (see `background.js` error handling).
 - i18n: add new keys to both `en` and `ja` locales.
-
