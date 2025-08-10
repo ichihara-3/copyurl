@@ -19,10 +19,10 @@ This repository contains a Chrome extension built with Node.js. Please follow th
   - `gh run view <run-id> --job <job-id> --log` to read exact errors.
 - Mirror CI locally before changes:
   - Use Node 20, run `npm ci`, then `jest --ci --runInBand` if needed to reproduce.
-- Push fixes without prompting when safe and scoped (tests/docs/config). Update the PR description as part of the fix.
+- Push fixes without prompting when safe and scoped (tests, documentation, lint configs, CI configs). Update the PR description as part of the fix.
 
 ## CI Stability Guidelines
-- Lockfile policy: commit `package-lock.json` so CI can run `npm ci` and benefit from caching.
+- Lockfile policy: always commit `package-lock.json` to enable `npm ci` in CI and improve caching performance.
 - Jest in sandboxes: when CI environments restrict process signals, prefer running Jest in-band:
   - Either set `jest --runInBand` in the workflow step, or in the `npm test` script if acceptable.
 - Node parity: keep local Node aligned with CI (Node 20). Optionally use an `.nvmrc` to standardize locally.

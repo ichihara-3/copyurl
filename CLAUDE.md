@@ -49,7 +49,7 @@ Uses Chrome extension i18n with messages in `src/_locales/{en,ja}/messages.json`
 
 - Common issues and fixes:
   - Missing lockfile with `npm ci` → commit `package-lock.json`.
-  - Jest worker shutdown error (e.g., `kill EPERM`) in restricted runners → run tests in-band (`jest --runInBand`) in the CI workflow.
+- Jest worker shutdown error (e.g., `EPERM` on kill signal) in restricted runners → run tests in-band (`jest --runInBand`) in the CI workflow.
   - Node version mismatch → align to CI Node 20; locally use `nvm use 20` (consider `.nvmrc`).
 
 - Local reproduction checklist:
