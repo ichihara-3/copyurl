@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>COPY RICH URL Options</title>
     <link rel="stylesheet" href="options.css" />
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   </head>
   <body>
@@ -14,22 +15,23 @@
       </header>
 
       <main>
-        <fieldset id="default-format">
-          <legend>Default Format for Icon Click</legend>
-          <div id="default-format-options"></div>
+        <fieldset id="default-format" role="group" aria-labelledby="default-format-legend">
+          <legend id="default-format-legend">Default Format for Icon Click</legend>
+          <div id="default-format-options" role="radiogroup" aria-labelledby="default-format-legend" aria-describedby="default-format-description"></div>
+          <div id="default-format-description" class="sr-only">Choose the format that will be used when clicking the extension icon</div>
         </fieldset>
 
-        <fieldset id="context-menu-options">
-          <legend>Context Menu Options</legend>
-          <p class="fieldset-description">Select which formats appear in your right-click menu</p>
-          <div id="options"></div>
+        <fieldset id="context-menu-options" role="group" aria-labelledby="context-menu-legend">
+          <legend id="context-menu-legend">Context Menu Options</legend>
+          <p class="fieldset-description" id="context-menu-description">Select which formats appear in your right-click menu</p>
+          <div id="options" role="group" aria-labelledby="context-menu-legend" aria-describedby="context-menu-description"></div>
         </fieldset>
 
-        <fieldset id="notification-options">
+        <fieldset id="notification-options" role="group" aria-labelledby="notification-options-title">
           <legend id="notification-options-title">Notification Options</legend>
           <p class="fieldset-description">Customize notification behavior</p>
           <div class="control-wrapper">
-            <input type="checkbox" id="show-notification" checked>
+            <input type="checkbox" id="show-notification" checked aria-describedby="show-notification-description">
             <label for="show-notification" id="show-notification-label">Show copy notification</label>
           </div>
           <p class="description" id="show-notification-description">Display a notification when content is copied to clipboard</p>

@@ -1,4 +1,4 @@
-/* Modern options page styling */
+/* Modern options page styling with accessibility improvements */
 :root {
   --primary-color: #4285f4; /* Google blue */
   --secondary-color: #34a853; /* Google green */
@@ -8,6 +8,21 @@
   --hover-color: #e8f0fe;
   --disabled-color: #9aa0a6;
   --shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  --focus-color: #1a73e8;
+  --focus-shadow: 0 0 0 2px var(--focus-color);
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 body {
@@ -83,7 +98,7 @@ legend {
   margin-bottom: 1rem;
 }
 
-/* Radio and checkbox styling */
+/* Radio and checkbox styling with accessibility */
 input[type="radio"],
 input[type="checkbox"] {
   margin-right: 0rem;
@@ -92,6 +107,32 @@ input[type="checkbox"] {
   height: 18px;
   flex-shrink: 0;
   margin-top: 3px;
+}
+
+/* Focus styles for form controls */
+input[type="radio"]:focus,
+input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: var(--focus-shadow);
+  border-radius: 2px;
+}
+
+/* Focus styles for interactive areas */
+.clickable-row:focus {
+  outline: none;
+  box-shadow: var(--focus-shadow);
+  border-radius: 4px;
+}
+
+/* Make interactive rows keyboard accessible */
+.clickable-row {
+  cursor: pointer;
+  outline: none;
+}
+
+.clickable-row:focus-visible {
+  box-shadow: var(--focus-shadow);
+  background-color: var(--hover-color);
 }
 
 /* Option containers */
