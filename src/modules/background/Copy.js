@@ -44,12 +44,13 @@ async function Copy(task, showNotification = true) {
     await writeRichLinkToClipboard(location.href, document.title);
   }
 
-  function showCopySuccessNotification() {
+  function showNotification(messageKey = 'notification_copied', isError = false) {
     // Don't show notification if disabled in options
     if (!shouldShowNotification) return;
-    let message = 'Copied!';
+    
+    let message = isError ? 'Error' : 'Copied!';
     try {
-      const i18nMessage = chrome.i18n.getMessage('notification_copied');
+      const i18nMessage = chrome.i18n.getMessage(messageKey);
       if (i18nMessage) {
         message = i18nMessage;
       }
@@ -61,16 +62,17 @@ async function Copy(task, showNotification = true) {
     notification.textContent = message;
     Object.assign(notification.style, {
       position: 'fixed',
-      bottom: '20px', // Changed from top to bottom for less intrusion
+      bottom: '20px',
       right: '20px',
       padding: '10px 20px',
-      backgroundColor: 'rgba(0, 0, 0, 0.75)',
+      backgroundColor: isError ? 'rgba(220, 38, 38, 0.9)' : 'rgba(0, 0, 0, 0.75)',
       color: 'white',
       borderRadius: '5px',
-      zIndex: '2147483647', // Max z-index
+      zIndex: '2147483647',
       fontSize: '14px',
       opacity: '0',
-      transition: 'opacity 0.3s ease-in-out, bottom 0.3s ease-in-out'
+      transition: 'opacity 0.3s ease-in-out, bottom 0.3s ease-in-out',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
     });
     document.body.appendChild(notification);
 
@@ -81,6 +83,7 @@ async function Copy(task, showNotification = true) {
     }, 10);
 
     // Animate out and remove
+    const displayDuration = isError ? 4000 : 2000; // Show errors longer
     setTimeout(() => {
       notification.style.opacity = '0';
       notification.style.bottom = '20px';
@@ -88,8 +91,17 @@ async function Copy(task, showNotification = true) {
         if (notification.parentNode) {
           notification.parentNode.removeChild(notification);
         }
-      }, 300); // Corresponds to transition duration
-    }, 2000); // Display duration
+      }, 300);
+    }, displayDuration);
+  }
+
+  function showCopySuccessNotification() {
+    showNotification('notification_copied', false);
+  }
+
+  function showCopyErrorNotification(errorType = 'clipboard') {
+    const messageKey = `notification_error_${errorType}`;
+    showNotification(messageKey, true);
   }
 
   async function writeToClipboard(content) {
@@ -97,9 +109,15 @@ async function Copy(task, showNotification = true) {
       await navigator.clipboard.writeText(content);
       showCopySuccessNotification();
     } catch (e) {
-      console.debug(
-        "Copying failed. Trying to fall back to execCommand('copy')"
-      );
+      console.debug("Clipboard API failed:", e.message);
+      console.debug("Trying to fall back to execCommand('copy')");
+      
+      // Determine error type based on the error message
+      let errorType = 'clipboard';
+      if (e.name === 'NotAllowedError' || e.message.includes('permission')) {
+        errorType = 'permission';
+      }
+      
       const textArea = document.createElement("textArea");
       textArea.textContent = content;
       document.body.append(textArea);
@@ -107,10 +125,17 @@ async function Copy(task, showNotification = true) {
       let success = false;
       try {
         success = document.execCommand("copy");
-      } catch (err) { /* ignore */ }
+      } catch (err) {
+        console.debug("execCommand('copy') also failed:", err.message);
+      }
       textArea.remove();
+      
       if (success) {
         showCopySuccessNotification();
+      } else {
+        // Both methods failed, show error notification
+        showCopyErrorNotification(errorType);
+        console.error("All clipboard methods failed. Error:", e.message);
       }
     }
   }
@@ -132,24 +157,35 @@ async function Copy(task, showNotification = true) {
       ]);
       showCopySuccessNotification();
     } catch (e) {
-      console.debug(e);
-      console.debug(
-        "copying failed. Trying to fall back to execCommand('copy')"
-      );
+      console.debug("Rich clipboard API failed:", e.message);
+      console.debug("Trying to fall back to execCommand('copy')");
+
+      // Determine error type based on the error message
+      let errorType = 'clipboard';
+      if (e.name === 'NotAllowedError' || e.message.includes('permission')) {
+        errorType = 'permission';
+      }
 
       function listener(event) {
         event.preventDefault();
         event.clipboardData.setData("text/html", div.outerHTML);
-        event.clipboardData.setData("text/plain", url);
+        event.clipboardData.setData("text/plain", `${title} | ${url}`);
       }
       document.addEventListener("copy", listener, { passive: false });
       let success = false;
       try {
         success = document.execCommand("copy");
-      } catch (err) { /* ignore */ }
+      } catch (err) {
+        console.debug("execCommand('copy') also failed:", err.message);
+      }
       document.removeEventListener("copy", listener);
+      
       if (success) {
         showCopySuccessNotification();
+      } else {
+        // Both methods failed, show error notification
+        showCopyErrorNotification(errorType);
+        console.error("All clipboard methods failed. Error:", e.message);
       }
     }
   }
