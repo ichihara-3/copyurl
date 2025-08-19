@@ -33,3 +33,22 @@ describe('initializeMenus', () => {
     });
   });
 });
+
+describe('keyboard commands', () => {
+  test('commands are defined in manifest', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const manifestPath = path.join(__dirname, '../src/manifest.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    
+    expect(manifest.commands).toBeDefined();
+    expect(manifest.commands['copy-rich-link']).toBeDefined();
+    expect(manifest.commands['copy-url-only']).toBeDefined();
+    expect(manifest.commands['copy-markdown']).toBeDefined();
+    
+    // Check keyboard shortcuts
+    expect(manifest.commands['copy-rich-link'].suggested_key.default).toBe('Ctrl+Shift+C');
+    expect(manifest.commands['copy-url-only'].suggested_key.default).toBe('Ctrl+Shift+U');
+    expect(manifest.commands['copy-markdown'].suggested_key.default).toBe('Ctrl+Shift+M');
+  });
+});

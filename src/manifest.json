@@ -13,6 +13,29 @@
     "default_title": "__MSG_default_title__"
   },
   "permissions": ["contextMenus", "storage", "activeTab", "scripting"],
+  "commands": {
+    "copy-rich-link": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+C",
+        "mac": "Command+Shift+C"
+      },
+      "description": "Copy rich link (title + URL)"
+    },
+    "copy-url-only": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+U",
+        "mac": "Command+Shift+U"
+      },
+      "description": "Copy URL only"
+    },
+    "copy-markdown": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+M",
+        "mac": "Command+Shift+M"
+      },
+      "description": "Copy as Markdown link"
+    }
+  },
   "icons": {
     "128": "img/copyurl_128.png"
   }
