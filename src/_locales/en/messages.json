@@ -4,7 +4,7 @@
     "description": "the description of the extension"
   },
   "default_title": {
-    "message": "Just Click the icon to copy the URL. \nOr RIGHT CLICK in a page and select COPY RICH URL."
+    "message": "Click to select copy format. Right-click for context menu."
   },
   "options_defaultFormat_title": {
     "message": "Default Format for Icon Click"

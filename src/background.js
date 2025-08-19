@@ -16,8 +16,7 @@ if (typeof chrome !== 'undefined') {
   chrome.runtime.onMessage.addListener(refreshMenus);
   // contextmenus click event
   chrome.contextMenus.onClicked.addListener(runTaskOfClickedMenu);
-  // icon click event - use the default format from storage
-  chrome.action.onClicked.addListener(tab => copyLink(tab, cachedDefaultFormat));
+  // Note: icon click now handled by popup (default_popup in manifest.json)
 
   // Listen for changes to the default format and notification preference
   chrome.storage.onChanged.addListener((changes, area) => {
